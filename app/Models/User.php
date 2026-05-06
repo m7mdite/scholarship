@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\Authenticatable as AuthAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,8 +12,15 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable , AuthAuthenticatable;
 
+
+
+
+    protected $table = 'Users';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+    const CREATED_AT = 'user_created_at';
     /**
      * The attributes that are mass assignable.
      *
@@ -33,6 +41,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getAuthPassword() { return $this->password; }
+    public function getEmailForPasswordReset() { return $this->email; }
 
     /**
      * Get the attributes that should be cast.
