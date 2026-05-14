@@ -13,4 +13,4 @@ Route::get('/hello', function () {
 });
 
 
-// Route::resource('scholarships', ScholarshipController::class);
+Route::resource('scholarships', ScholarshipController::class);

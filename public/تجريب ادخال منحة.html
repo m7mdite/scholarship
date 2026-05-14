@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تجربة إضافة منحة مع صورة</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f2f2f2; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; }
+        button { background: #1e3a8a; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer; width: 100%; }
+        #result { margin-top: 20px; background: #eef2ff; padding: 15px; border-radius: 10px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>➕ إضافة منحة جديدة (مع صورة)</h2>
+    <form id="scholarshipForm" enctype="multipart/form-data">
+        <!-- بيانات المنحة -->
+        <label>اسم المنحة *</label>
+        <input type="text" name="scholarship_name" required>
+
+        <label>الدرجة العلمية *</label>
+        <input type="text" name="degree" required>
+
+        <label>التمويل</label>
+        <input type="text" name="finance">
+
+        <label>الوصف</label>
+        <textarea name="scholarship_description" rows="3"></textarea>
+
+        <label>الجهة المانحة</label>
+        <input type="text" name="donar">
+
+        <label>تاريخ البدء (YYYY-MM-DD)</label>
+        <input type="date" name="start_date">
+
+        <label>تاريخ الانتهاء (YYYY-MM-DD)</label>
+        <input type="date" name="finished_date">
+
+        <label>تاريخ النشر (YYYY-MM-DD)</label>
+        <input type="date" name="scholarship_created_at">
+
+        <label>لغة المنحة</label>
+        <input type="text" name="scholarship_language">
+
+        <label>الدولة (ID) *</label>
+        <input type="number" name="country_id" required>
+
+        <label>المدينة (ID) *</label>
+        <input type="number" name="city_id" required>
+
+        <label>التخصص (ID) *</label>
+        <input type="number" name="specialization_id" required>
+
+        <label>الفئة (ID) *</label>
+        <input type="number" name="category_id" required>
+
+        <label>الصورة (jpg/png) - اختياري</label>
+        <input type="file" name="photo" accept="image/jpeg,image/png">
+
+        <button type="submit">إرسال المنحة</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    const form = document.getElementById('scholarshipForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        resultDiv.innerHTML = 'جاري الإرسال...';
+
+        const formData = new FormData(form); // يحتوي على جميع الحقول والملف
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/scholarships', {
+                method: 'POST',
+                body: formData,
+                // لا نضيف Content-Type لأن fetch سيضيفه مع boundary صحيح
+            });
+            const data = await response.json();
+            if (response.ok) {
+                resultDiv.innerHTML = `<strong>✅ تمت الإضافة بنجاح</strong>\n<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                form.reset();
+            } else {
+                resultDiv.innerHTML = `<strong>❌ فشل الإرسال</strong>\n<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+        } catch (err) {
+            resultDiv.innerHTML = `<strong>⚠️ خطأ في الاتصال بالسيرفر</strong>\n${err.message}`;
+        }
+    });
+</script>
+</body>
+</html>

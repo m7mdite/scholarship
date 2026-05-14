@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Scholarship extends Model
 {
     protected $table = 'scholarships';
     protected $primaryKey = 'id';
-    public $timestamps = false;
-    const CREATED_AT = 'scholarship_created_at';
+    public $timestamps = true;
+    protected $appends = ['remaining_time'];
 
     protected $fillable = [
         'scholarship_name',
@@ -19,7 +19,6 @@ class Scholarship extends Model
         'donar',
         'finished_date',
         'start_date',
-        'scholarship_created_at',
         'scholarship_language',
         'country_id',
         'city_id',
@@ -68,4 +67,34 @@ class Scholarship extends Model
     {
         return $this->hasMany(PersonalExperience::class, 'scholarship_id', 'id');
     }
+
+
+   
+
+public function getRemainingTimeAttribute()
+{
+    if (!$this->finished_date) return 'غير محدد';
+
+    $now = Carbon::now();
+    $finish = Carbon::parse($this->finished_date);
+    $isPast = $finish->isPast();
+    $days = $isPast ? $finish->diffInDays($now) : $now->diffInDays($finish);
+
+    if ($days < 30) {
+        $text = $days . ' يوم';
+    } elseif ($days < 365) {
+        $months = floor($days / 30);
+        $text = $months . ' شهر';
+    } else {
+        $years = floor($days / 365);
+        $remainingDays = $days % 365;
+        $months = floor($remainingDays / 30);
+        $text = $years . ' سنة';
+        if ($months > 0) {
+            $text .= ' و ' . $months . ' شهر';
+        }
+    }
+
+    return ($isPast ? 'انتهت منذ ' : 'متبقي ') . $text;
+}
 }

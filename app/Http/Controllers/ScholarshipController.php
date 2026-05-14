@@ -8,7 +8,7 @@ use App\Models\Country;
 use App\Models\Scholarship;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class ScholarshipController extends Controller
 {
     // =======================================================================
@@ -38,25 +38,70 @@ class ScholarshipController extends Controller
             'city_id' => 'required|exists:cities,id',
             'specialization_id' => 'required|exists:specializations,id',
             'category_id' => 'required|exists:categories,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+        
 
-        Scholarship::create($validated);
-        return redirect()->route('scholarships.index')->with('success', 'تمت إضافة المنحة بنجاح');
+        $scholarship = Scholarship::create($validated);
+        if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('scholarships', $fileName, 'public');
+
+        // 4. حفظ المسار في جدول photos
+        $scholarship->photos()->create([
+            'image_path' => Storage::url($path),
+            'city_id' => $validated['city_id'],
+            'scholarship_id' => $scholarship->id,
+            
+            // أو '/storage/' . $path
+        ]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة المنحة بنجاح',
+            'data' => $scholarship->load('photos') // تحميل الصور المرتبطة بالمنحة
+        ], 201);
+    }
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة المنحة بنجاح',
+            'data' => $scholarship
+        ], 201);
+
+        // return redirect()->route('scholarships.index')->with('success', 'تمت إضافة المنحة بنجاح');
     }
 
     // =======================================================================
     public function index()
     {
         $scholarships = Scholarship::with(['country', 'city', 'specialization', 'category'])->get();
-        return view('scholarships.index', compact('scholarships'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب البيانات بنجاح',
+            'data' => $scholarships
+        ], 200);
+
+
+
+        // return view('scholarships.index', compact('scholarships'));
+
     }
 
 
     // =======================================
     public function show($id)
     {
-        $scholarship = Scholarship::with(['country', 'city', 'specialization', 'category', 'howToApply', 'applicationCriteria', 'photos',
-         'personalExperiences',
+        $scholarship = Scholarship::with([
+            'country',
+            'city',
+            'specialization',
+            'category',
+            'howToApply',
+            'applicationCriteria',
+            'photos',
+            'personalExperiences',
         ],)->findOrFail($id);
         return view('scholarships.show', compact('scholarship'));
     }

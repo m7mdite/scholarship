@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('donar', 40);
             $table->date('finished_date');
             $table->date('start_date');
-            $table->date('scholarship_created_at');
             $table->string('scholarship_language', 30);
             $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
             $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
