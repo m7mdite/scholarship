@@ -24,6 +24,7 @@ class Scholarship extends Model
         'city_id',
         'specialization_id',
         'category_id',
+        'scholarship_link'
     ];
 
     

@@ -38,9 +38,6 @@
         <label>تاريخ الانتهاء (YYYY-MM-DD)</label>
         <input type="date" name="finished_date">
 
-        <label>تاريخ النشر (YYYY-MM-DD)</label>
-        <input type="date" name="scholarship_created_at">
-
         <label>لغة المنحة</label>
         <input type="text" name="scholarship_language">
 
@@ -56,6 +53,9 @@
         <label>الفئة (ID) *</label>
         <input type="number" name="category_id" required>
 
+        <label>رابط المنحة (اختياري)</label>
+        <input type="url" name="scholarship_link">
+
         <label>الصورة (jpg/png) - اختياري</label>
         <input type="file" name="photo" accept="image/jpeg,image/png">
 
@@ -63,7 +63,6 @@
     </form>
     <div id="result"></div>
 </div>
-
 <script>
     const form = document.getElementById('scholarshipForm');
     const resultDiv = document.getElementById('result');
@@ -72,25 +71,29 @@
         e.preventDefault();
         resultDiv.innerHTML = 'جاري الإرسال...';
 
-        const formData = new FormData(form); // يحتوي على جميع الحقول والملف
+        const formData = new FormData(form);
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/scholarships', {
                 method: 'POST',
-                body: formData,
-                // لا نضيف Content-Type لأن fetch سيضيفه مع boundary صحيح
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: formData
             });
             const data = await response.json();
+            console.log('Full response:', data);  // ← سيبقى في الكونسول
             if (response.ok) {
                 resultDiv.innerHTML = `<strong>✅ تمت الإضافة بنجاح</strong>\n<pre>${JSON.stringify(data, null, 2)}</pre>`;
                 form.reset();
             } else {
                 resultDiv.innerHTML = `<strong>❌ فشل الإرسال</strong>\n<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                // لن نمسح النموذج هنا حتى نرى الخطأ
             }
         } catch (err) {
+            console.error('Fetch error:', err);
             resultDiv.innerHTML = `<strong>⚠️ خطأ في الاتصال بالسيرفر</strong>\n${err.message}`;
         }
     });
-</script>
-</body>
+</script></body>
 </html>

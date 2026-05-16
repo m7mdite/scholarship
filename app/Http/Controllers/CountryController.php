@@ -7,50 +7,96 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
+    // جلب جميع الدول
     public function index()
     {
         $countries = Country::all();
-        return view('countries.index', compact('countries'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب الدول بنجاح',
+            'data' => $countries
+        ], 200);
     }
 
-    public function create()
-    {
-        return view('countries.create');
-    }
-
+    // إضافة دولة جديدة
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'country_name' => 'required|string|max:30',
             'country_rate' => 'required|numeric',
         ]);
-        Country::create($request->all());
-        return redirect()->route('countries.index')->with('success', 'تمت الإضافة');
+
+        $country = Country::create($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة الدولة بنجاح',
+            'data' => $country
+        ], 201);
     }
 
-    public function show(Country $country)
+    // عرض دولة محددة
+    public function show($id)
     {
-        return view('countries.show', compact('country'));
+        $country = Country::find($id);
+        if (!$country) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الدولة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب الدولة بنجاح',
+            'data' => $country
+        ], 200);
     }
 
-    public function edit(Country $country)
+    // تحديث دولة
+    public function update(Request $request, $id)
     {
-        return view('countries.edit', compact('country'));
-    }
+        $country = Country::find($id);
+        if (!$country) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الدولة غير موجودة',
+                'data' => null
+            ], 404);
+        }
 
-    public function update(Request $request, Country $country)
-    {
-        $request->validate([
-            'country_name' => 'required|string|max:30',
-            'country_rate' => 'required|numeric',
+        $validated = $request->validate([
+            'country_name' => 'sometimes|string|max:30',
+            'country_rate' => 'sometimes|numeric',
         ]);
-        $country->update($request->all());
-        return redirect()->route('countries.index')->with('success', 'تم التحديث');
+
+        $country->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تحديث الدولة بنجاح',
+            'data' => $country
+        ], 200);
     }
 
-    public function destroy(Country $country)
+    // حذف دولة
+    public function destroy($id)
     {
+        $country = Country::find($id);
+        if (!$country) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الدولة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+
         $country->delete();
-        return redirect()->route('countries.index')->with('success', 'تم الحذف');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم حذف الدولة بنجاح',
+            'data' => null
+        ], 200);
     }
 }

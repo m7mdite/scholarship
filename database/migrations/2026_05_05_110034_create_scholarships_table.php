@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('finished_date');
             $table->date('start_date');
             $table->string('scholarship_language', 30);
+            $table->string('scholarship_link')->default('#');
             $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
             $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
             $table->foreignId('specialization_id')->constrained('specializations')->onDelete('cascade');

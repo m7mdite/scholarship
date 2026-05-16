@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توثيق API - منصة المنح الدراسية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        code { background: #f1f1f1; padding: 0.2rem 0.4rem; border-radius: 6px; font-family: monospace; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 12px; overflow-x: auto; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+    <h1 class="text-3xl font-bold text-blue-800 mb-2 border-r-4 border-blue-600 pr-4">📘 وثائق API</h1>
+    <p class="text-gray-600 mb-6">الروابط التالية مخصّصة للتواصل بين الواجهة الأمامية (React) والخادم (Laravel).</p>
+
+    <!-- قاعدة API -->
+    <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">🌐 قاعدة الرابط (Base URL)</h2>
+        <code class="text-blue-700 bg-blue-50 px-3 py-1 rounded">http://127.0.0.1:8000/api</code>
+        <p class="text-gray-600 mt-2">جميع الروابط التالية مسبوقة بهذه القاعدة.</p>
+    </div>
+
+    <!-- 1. تسجيل حساب -->
+    <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1️⃣ تسجيل حساب جديد</h2>
+        <div class="flex flex-wrap gap-3 my-3">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold">POST</span>
+            <code class="bg-gray-100 px-3 py-1 rounded">/register</code>
+        </div>
+        <p class="text-gray-700 mb-2">إنشاء حساب جديد. الدور (<code>role</code>) يتم تعيينه تلقائياً إلى <code>user</code>.</p>
+        
+        <div class="mt-3">
+            <h3 class="font-semibold">▶ نموذج الطلب (JSON)</h3>
+            <pre>{
+  "name": "أحمد محمد",
+  "email": "ahmed@example.com",
+  "password": "123456"
+}</pre>
+        </div>
+
+        <div class="mt-3">
+            <h3 class="font-semibold">◀ نموذج الاستجابة (نجاح - 201)</h3>
+            <pre>{
+  "status": "success",
+  "message": "تم إنشاء الحساب بنجاح",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "أحمد محمد",
+      "email": "ahmed@example.com",
+      "role": "user",
+      "created_at": "2025-01-15T10:00:00.000000Z"
+    },
+    "token": "1|abcdef123456...",
+    "token_type": "Bearer"
+  }
+}</pre>
+        </div>
+    </div>
+
+    <!-- 2. تسجيل الدخول -->
+    <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2️⃣ تسجيل الدخول</h2>
+        <div class="flex flex-wrap gap-3 my-3">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold">POST</span>
+            <code class="bg-gray-100 px-3 py-1 rounded">/login</code>
+        </div>
+        <div class="mt-3">
+            <h3 class="font-semibold">▶ نموذج الطلب (JSON)</h3>
+            <pre>{
+  "email": "ahmed@example.com",
+  "password": "123456"
+}</pre>
+        </div>
+        <div class="mt-3">
+            <h3 class="font-semibold">◀ نموذج الاستجابة (نجاح - 200)</h3>
+            <pre>{
+  "status": "success",
+  "message": "تم تسجيل الدخول بنجاح",
+  "data": {
+    "user": { ... },
+    "token": "2|xyz789...",
+    "token_type": "Bearer"
+  }
+}</pre>
+        </div>
+    </div>
+
+    <!-- 3. جلب أول 15 منحة (للواجهة الرئيسية) -->
+    <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">3️⃣ عرض أول 15 منحة نشطة</h2>
+        <div class="flex flex-wrap gap-3 my-3">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">GET</span>
+            <code class="bg-gray-100 px-3 py-1 rounded">/top-scholarships</code>
+        </div>
+        <p class="text-gray-700 mb-2">يعرض المنح التي لم تنتهِ (<code>finished_date &gt;= اليوم</code>)، مرتبة من الأحدث، مع:<br>
+        - اسم المنحة، التمويل، الدرجة، اسم المدينة، اسم التخصص<br>
+        - <code>start_status</code>: نص يوضح "تبدأ في ..." أو "تبقت X يوم"<br>
+        - <code>photo_url</code>: رابط أول صورة (أو null).</p>
+        
+        <div class="mt-3">
+            <h3 class="font-semibold">◀ نموذج الاستجابة (200)</h3>
+            <pre>{
+  "status": "success",
+  "message": "تم جلب أول 15 منحة بنجاح",
+  "data": [
+    {
+      "id": 25,
+      "scholarship_name": "منحة جامعة الملك سعود",
+      "finance": "ممولة بالكامل",
+      "degree": "ماجستير",
+      "city_name": "الرياض",
+      "specialization_name": "علوم الحاسب",
+      "start_status": "تبدأ في 2025-09-01",
+      "photo_url": "http://127.0.0.1:8000/storage/scholarships/photo1.jpg"
+    },
+    {
+      "id": 24,
+      "scholarship_name": "منحة حكومة الإمارات",
+      "finance": "جزئية",
+      "degree": "بكالوريوس",
+      "city_name": "دبي",
+      "specialization_name": "إدارة الأعمال",
+      "start_status": "تبقت 23 يوم",
+      "photo_url": null
+    }
+  ]
+}</pre>
+        </div>
+    </div>
+
+    <!-- 4. أمثلة تفاعلية اختيارية (لتجربة الـ API) -->
+    <div class="bg-white rounded-xl shadow-md p-5">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">🧪 جرب الـ API مباشرة</h2>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold text-blue-700">تسجيل حساب</h3>
+            <button id="testRegister" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition mt-2">إرسال طلب تجريبي</button>
+            <pre id="registerResult" class="mt-2 text-sm"></pre>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="font-semibold text-blue-700">تسجيل الدخول</h3>
+            <button id="testLogin" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition mt-2">إرسال طلب تجريبي</button>
+            <pre id="loginResult" class="mt-2 text-sm"></pre>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-blue-700">جلب أول 15 منحة</h3>
+            <button id="testTop" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition mt-2">جلب البيانات</button>
+            <pre id="topResult" class="mt-2 text-sm"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    const base = 'http://127.0.0.1:8000/api';
+
+    // تسجيل حساب
+    document.getElementById('testRegister').addEventListener('click', async () => {
+        const fakeUser = {
+            name: 'مستخدم تجريبي',
+            email: `test_${Date.now()}@example.com`,
+            password: '123456'
+        };
+        try {
+            const res = await fetch(`${base}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fakeUser)
+            });
+            const data = await res.json();
+            document.getElementById('registerResult').innerHTML = JSON.stringify(data, null, 2);
+        } catch (err) {
+            document.getElementById('registerResult').innerHTML = 'خطأ: ' + err.message;
+        }
+    });
+
+    // تسجيل الدخول (يستخدم نفس البريد وكلمة المرور المُنشأة في التسجيل، ولكن يمكننا تجربة بيانات ثابتة)
+    // لتبسيط التجربة، سنستخدم بيانات login ثابتة لكنها قد تفشل إذا لم يكن الحساب موجوداً.
+    // الأفضل: نستخدم البريد الذي تم إنشاؤه في التسجيل (لكن يصبح معقد). سنعطي زراً مستقلاً مع بيانات افتراضية قد تنجح إذا كان الحساب موجوداً.
+    document.getElementById('testLogin').addEventListener('click', async () => {
+        const creds = {
+            email: 'ahmed@example.com',   // غيّره إلى بريد موجود لديك
+            password: '123456'
+        };
+        try {
+            const res = await fetch(`${base}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(creds)
+            });
+            const data = await res.json();
+            document.getElementById('loginResult').innerHTML = JSON.stringify(data, null, 2);
+        } catch (err) {
+            document.getElementById('loginResult').innerHTML = 'خطأ: ' + err.message;
+        }
+    });
+
+    // جلب المنح
+    document.getElementById('testTop').addEventListener('click', async () => {
+        try {
+            const res = await fetch(`${base}/top-scholarships`);
+            const data = await res.json();
+            document.getElementById('topResult').innerHTML = JSON.stringify(data, null, 2);
+        } catch (err) {
+            document.getElementById('topResult').innerHTML = 'خطأ: ' + err.message;
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -8,54 +8,96 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+    // جلب جميع المدن
     public function index()
     {
         $cities = City::with('country')->get();
-        return view('cities.index', compact('cities'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب المدن بنجاح',
+            'data' => $cities
+        ], 200);
     }
 
-    public function create()
-    {
-        $countries = Country::all();
-        return view('cities.create', compact('countries'));
-    }
-
+    // إنشاء مدينة جديدة
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'city_name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
         ]);
 
-        City::create($request->all());
-        return redirect()->route('cities.index')->with('success', 'تمت إضافة المدينة بنجاح');
+        $city = City::create($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة المدينة بنجاح',
+            'data' => $city->load('country')
+        ], 201);
     }
 
-    public function show(City $city)
+    // عرض مدينة محددة
+    public function show($id)
     {
-        return view('cities.show', compact('city'));
+        $city = City::with('country')->find($id);
+        if (!$city) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'المدينة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب المدينة بنجاح',
+            'data' => $city
+        ], 200);
     }
 
-    public function edit(City $city)
+    // تحديث مدينة
+    public function update(Request $request, $id)
     {
-        $countries = Country::all();
-        return view('cities.edit', compact('city', 'countries'));
-    }
+        $city = City::find($id);
+        if (!$city) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'المدينة غير موجودة',
+                'data' => null
+            ], 404);
+        }
 
-    public function update(Request $request, City $city)
-    {
-        $request->validate([
-            'city_name' => 'required|string|max:25',
-            'country_id' => 'required|exists:countries,id',
+        $validated = $request->validate([
+            'city_name' => 'sometimes|string|max:25',
+            'country_id' => 'sometimes|exists:countries,id',
         ]);
 
-        $city->update($request->all());
-        return redirect()->route('cities.index')->with('success', 'تم تحديث المدينة بنجاح');
+        $city->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تحديث المدينة بنجاح',
+            'data' => $city->load('country')
+        ], 200);
     }
 
-    public function destroy(City $city)
+    // حذف مدينة
+    public function destroy($id)
     {
+        $city = City::find($id);
+        if (!$city) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'المدينة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+
         $city->delete();
-        return redirect()->route('cities.index')->with('success', 'تم حذف المدينة بنجاح');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم حذف المدينة بنجاح',
+            'data' => null
+        ], 200);
     }
 }

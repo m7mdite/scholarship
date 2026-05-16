@@ -3,59 +3,103 @@
 namespace App\Http\Controllers;
 
 use App\Models\Specialization;
-use App\Models\Category;
 use Illuminate\Http\Request;
 
 class SpecializationController extends Controller
 {
+    // جلب جميع التخصصات (مع الفئة المرتبطة)
     public function index()
     {
         $specializations = Specialization::with('category')->get();
-        return view('specializations.index', compact('specializations'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب التخصصات بنجاح',
+            'data' => $specializations
+        ], 200);
     }
 
-    public function create()
-    {
-        $categories = Category::all();
-        return view('specializations.create', compact('categories'));
-    }
-
+    // إضافة تخصص جديد
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'specialization_name' => 'required|string|max:30',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        Specialization::create($request->all());
-        return redirect()->route('specializations.index')->with('success', 'تمت إضافة التخصص بنجاح');
+        $specialization = Specialization::create($validated);
+        // تحميل العلاقة لإرجاعها مع البيانات
+        $specialization->load('category');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة التخصص بنجاح',
+            'data' => $specialization
+        ], 201);
     }
 
-    public function show(Specialization $specialization)
+    // عرض تخصص محدد
+    public function show($id)
     {
-        return view('specializations.show', compact('specialization'));
+        $specialization = Specialization::with('category')->find($id);
+        if (!$specialization) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'التخصص غير موجود',
+                'data' => null
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب التخصص بنجاح',
+            'data' => $specialization
+        ], 200);
     }
 
-    public function edit(Specialization $specialization)
+    // تحديث تخصص
+    public function update(Request $request, $id)
     {
-        $categories = Category::all();
-        return view('specializations.edit', compact('specialization', 'categories'));
-    }
+        $specialization = Specialization::find($id);
+        if (!$specialization) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'التخصص غير موجود',
+                'data' => null
+            ], 404);
+        }
 
-    public function update(Request $request, Specialization $specialization)
-    {
-        $request->validate([
-            'specialization_name' => 'required|string|max:30',
-            'category_id' => 'required|exists:categories,id',
+        $validated = $request->validate([
+            'specialization_name' => 'sometimes|string|max:30',
+            'category_id' => 'sometimes|exists:categories,id',
         ]);
 
-        $specialization->update($request->all());
-        return redirect()->route('specializations.index')->with('success', 'تم تحديث التخصص بنجاح');
+        $specialization->update($validated);
+        $specialization->load('category');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تحديث التخصص بنجاح',
+            'data' => $specialization
+        ], 200);
     }
 
-    public function destroy(Specialization $specialization)
+    // حذف تخصص
+    public function destroy($id)
     {
+        $specialization = Specialization::find($id);
+        if (!$specialization) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'التخصص غير موجود',
+                'data' => null
+            ], 404);
+        }
+
         $specialization->delete();
-        return redirect()->route('specializations.index')->with('success', 'تم حذف التخصص بنجاح');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم حذف التخصص بنجاح',
+            'data' => null
+        ], 200);
     }
 }

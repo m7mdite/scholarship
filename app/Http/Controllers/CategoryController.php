@@ -10,47 +10,84 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return view('categories.index', compact('categories'));
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب الفئات بنجاح',
+            'data' => $categories
+        ], 200);
     }
 
-    public function create()
-    {
-        return view('categories.create');
-    }
+
 
     public function store(Request $request)
     {
-        $request->validate([
+      $validated =  $request->validate([
             'category_name' => 'required|string|max:30',
         ]);
 
-        Category::create($request->all());
-        return redirect()->route('categories.index')->with('success', 'تمت إضافة الفئة بنجاح');
+        $category= Category::create($validated);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت إضافة الفئة بنجاح',
+            'data' => $category
+        ], 201);
     }
 
-    public function show(Category $category)
+    public function show($id)
     {
-        return view('categories.show', compact('category'));
+        $category = Category::with('category')->find($id);
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الفئة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم جلب الفئة بنجاح',
+            'data' => $category
+        ], 200);
     }
 
-    public function edit(Category $category)
-    {
-        return view('categories.edit', compact('category'));
-    }
+    
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
+        $category =Category::find($id);
+        if (!$category) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الفئة غير موجودة',
+                'data' => null
+            ], 404);
+        }
         $request->validate([
             'category_name' => 'required|string|max:30',
         ]);
 
         $category->update($request->all());
-        return redirect()->route('categories.index')->with('success', 'تم تحديث الفئة بنجاح');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تحديث الفئة بنجاح',
+            'data' => $category
+        ], 200);
     }
 
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        $category->delete();
-        return redirect()->route('categories.index')->with('success', 'تم حذف الفئة بنجاح');
+        $city = Category::find($id);
+        if (!$city) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الفئة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+         return response()->json([
+            'status' => 'success',
+            'message' => 'تم حذف  بنجاح',
+            'data' => null
+        ], 200);
     }
 }

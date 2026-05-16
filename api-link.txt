@@ -1,0 +1,36 @@
+
+انشاء حساب 
+post: http://127.0.0.1:8000/api/register 
+body={name , email , passowrd}
+
+تسجيل الدخول 
+post: http://127.0.0.1:8000/api/login 
+body={email , passowrd}
+
+الدول 
+get,post,delete,put: http://127.0.0.1:8000/api/countries 
+body={country_name,country_rate}
+
+المدن 
+get,post,delete,put: http://127.0.0.1:8000/api/cities 
+body={city_name,country_id}
+
+الفئات
+get,post,delete,put: http://127.0.0.1:8000/api/categories
+body={category_name}
+
+الإختصاصات
+get,post,delete,put: http://127.0.0.1:8000/api/specializations
+body={specialization_name , category_id}
+
+المنح
+get,post,delete,put: http://127.0.0.1:8000/api/scholarships
+body={specialization_name , category_id}
+
+
+جلب 15 منحة
+get: http://127.0.0.1:8000/api/top-scholarships 
+body={}
+
+
+

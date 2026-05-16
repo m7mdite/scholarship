@@ -1,76 +1,95 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // عرض صفحة تسجيل الدخول
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    // معالجة تسجيل الدخول
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
-        }
-
-        return back()->withErrors([
-            'email' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
-        ])->onlyInput('email');
-    }
-
-    // عرض صفحة التسجيل
-    public function showRegisterForm()
-    {
-        return view('auth.register');
-    }
-
-    // معالجة التسجيل
     public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => 'required|email|unique:Users,email',
+            'password' => 'required|min:6',
+            'user_created_at' => 'nullable|date', // أو يمكن تركه لاحقاً
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            
+            // role ليس موجوداً في $fillable بعد، لكننا سنضيفه لاحقاً
+        ]);
+        // إنشاء توكن للمستخدم
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم إنشاء الحساب بنجاح',
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer',
+            ]
+        ], 201);
+    }
+
+    // تسجيل الدخول
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        Auth::login($user);
+        $user = User::where('email', $request->email)->first();
 
-        return redirect('/dashboard');
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['بيانات الدخول غير صحيحة.'],
+                'password' => ['بيانات الدخول غير صحيحة.'],
+            ]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تسجيل الدخول بنجاح',
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer',
+            ]
+        ], 200);
     }
 
-    // تسجيل الخروج
+    // تسجيل الخروج (حذف التوكن)
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تم تسجيل الخروج',
+        ], 200);
     }
 
-    // لوحة التحكم بعد تسجيل الدخول
-    public function dashboard()
+    // جلب بيانات المستخدم الحالي
+    public function me(Request $request)
     {
-        return view('dashboard');
+        return response()->json([
+            'status' => 'success',
+            'data' => $request->user()
+        ], 200);
     }
+
+
+    
 }
