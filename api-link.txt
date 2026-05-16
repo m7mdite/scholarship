@@ -25,7 +25,7 @@ body={specialization_name , category_id}
 
 المنح (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/scholarships
-body={specialization_name , category_id}
+body={scholarship_name , degree , finance , scholarship_description , donar  , start_date  , finished_date , scholarship_language , scholarship_link  , country_id , city_id , specialization_id , category_id , photo }
 
 
 جلب 15 منحة
