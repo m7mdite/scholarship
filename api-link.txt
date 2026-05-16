@@ -11,19 +11,19 @@ body={email , passowrd}
 get,post,delete,put: http://127.0.0.1:8000/api/countries 
 body={country_name,country_rate}
 
-المدن 
+المدن (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/cities 
 body={city_name,country_id}
 
-الفئات
+الفئات (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/categories
 body={category_name}
 
-الإختصاصات
+الإختصاصات (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/specializations
 body={specialization_name , category_id}
 
-المنح
+المنح (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/scholarships
 body={specialization_name , category_id}
 

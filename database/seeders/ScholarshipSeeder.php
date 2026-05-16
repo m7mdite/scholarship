@@ -24,10 +24,17 @@ class ScholarshipSeeder extends Seeder
         $specialization = Specialization::firstOrCreate(['specialization_name' => 'علوم الحاسب'], ['category_id' => 1]);
         $category = Category::firstOrCreate(['category_name' => 'تكنولوجيا']);
 
+        $sampleImagesDir = database_path('seeders/images');
+        if (!is_dir($sampleImagesDir)) {
+            mkdir($sampleImagesDir, 0755, true);
+            $this->command->warn("تم إنشاء المجلد {$sampleImagesDir}، ولكن لا توجد صور فيه. لن تتم إضافة صور للمنح.");
+        }
         // مصفوفة بأسماء الصور المتاحة
         $sampleImages = [];
         for ($i = 1; $i <= 10; $i++) {
-            $sampleImages[] = $i . '.jpg';
+            if (file_exists($sampleImagesDir . '/' . $i . '.jpg')) {
+                $sampleImages[] = $i . '.jpg';
+            }
         }
 
         for ($i = 1; $i <= 10; $i++) {
@@ -51,7 +58,7 @@ class ScholarshipSeeder extends Seeder
             // ربط صورة وهمية بالمنحة (استخدم صورة من المجلد sample-images)
             // سنختار صورة عشوائية من بين الـ 10 صور
             $randomImage = $sampleImages[array_rand($sampleImages)];
-            $sourcePath = storage_path('app/public/sample-images/' . $randomImage);
+            $sourcePath = database_path('seeders/images/' . $randomImage);
             $newImageName = 'scholarship_' . $scholarship->id . '.jpg';
             $destPath = storage_path('app/public/scholarships/' . $newImageName);
 
