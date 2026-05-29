@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+/** 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Scholarship[] $favoriteScholarships
+ */
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\Authenticatable as AuthAuthenticatable;
@@ -9,10 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-class User extends Authenticatable 
+
+class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable , AuthAuthenticatable, HasApiTokens;
+    use HasFactory, Notifiable, AuthAuthenticatable, HasApiTokens;
 
 
 
@@ -42,8 +46,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthPassword() { return $this->password; }
-    public function getEmailForPasswordReset() { return $this->email; }
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+    public function getEmailForPasswordReset()
+    {
+        return $this->email;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -57,4 +67,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // public function favoriteScholarships()
+    // {
+    //     return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id');
+    // }
+    // public function favoriteScholarships()
+    // {
+    //     return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id');
+    //         // ->withTimestamps();
+    // }
+   
+public function favoriteScholarships()
+{
+    return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id')
+        ->withPivot('created_at', 'updated_at')
+        ->withTimestamps('created_at', 'updated_at');
+}
 }

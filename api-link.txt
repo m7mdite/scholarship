@@ -25,12 +25,35 @@ body={specialization_name , category_id}
 
 المنح (الادمن)
 get,post,delete,put: http://127.0.0.1:8000/api/scholarships
-body={scholarship_name , degree , finance , scholarship_description , donar  , start_date  , finished_date , scholarship_language , scholarship_link  , country_id , city_id , specialization_id , category_id , photo }
+body={scholarship_name,degree,finance,scholarship_description,donar,start_date,finished_date,scholarship_language,scholarship_link,country_id,city_id,specialization_id,category_id,photo}
 
 
 جلب 15 منحة
 get: http://127.0.0.1:8000/api/top-scholarships 
 body={}
 
+اضافة منحة للمفضلة ( اليوزر)
+post: http://127.0.0.1:8000/api/favorites/ايدي المنحة
+body={} 
+header ="Authorization: Bearer {token}"
 
 
+ازالة منحة من المفضلة ( اليوزر)
+delete: http://127.0.0.1:8000/api/favorites/ايدي المنحة
+body={} 
+header ="Authorization: Bearer {token}"
+
+جلب قائمة المفضلة ( اليوزر)
+get: http://127.0.0.1:8000/api/favorites
+body={} 
+header ="Authorization: Bearer {token}"
+
+
+الحصول على منحة مع منح مشابهة لها (نفس الاختصاص، ثم المدينة أو الدولة أو الفئة)
+get: http://127.0.0.1:8000/api/scholarships/ايدي المنحة/similar
+body={}
+
+
+جلب المنح حسب الدولة
+get: http://127.0.0.1:8000/api/scholarships/country/ايدي الدولة
+body={}
