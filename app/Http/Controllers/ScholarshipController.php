@@ -40,7 +40,7 @@ class ScholarshipController extends Controller
     {
         // $user = $request->user();
         $user = auth('sanctum')->user(); // بدلاً من $request->user()
-        Log::info(get_class($user));
+        
         $today = Carbon::today();
         Log::info('User ID: ' . ($user ? $user->id : 'null'));
         Log::info('User: ', [$user ? $user->id : 'null']);
@@ -95,7 +95,7 @@ class ScholarshipController extends Controller
                 ->map(function ($scholarship) use ($today) {
                     return $this->formatScholarshipForTop($scholarship, $today);
                 });
-            $message = 'تم جلب أول 15 منحة بنجاح';
+            $message = 'تم جلب أحدث 15 منحة بنجاح';
         }
 
         return response()->json([
