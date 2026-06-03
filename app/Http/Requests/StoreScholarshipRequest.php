@@ -31,6 +31,14 @@ class StoreScholarshipRequest extends FormRequest
             'specialization_id' => 'required|exists:specializations,id',
             'category_id' => 'required|exists:categories,id',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'application_criteria' => 'nullable|array',
+            'application_criteria.*.requirment_type' => 'required_with:application_criteria|string|max:20',
+            'application_criteria.*.application_criteria_value' => 'required_with:application_criteria|string|max:30',
+            'application_criteria.*.application_criteria_description' => 'nullable|string|max:100',
+            'reviewer_name' => 'nullable|string|max:100',
+            'review' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'how_to_apply_description' => 'nullable|string|max:400',
         ];
     }
 
@@ -68,6 +76,18 @@ class StoreScholarshipRequest extends FormRequest
             'photo.image' => 'الملف المرفق يجب أن يكون صورة.',
             'photo.mimes' => 'الصورة يجب أن تكون بصيغة jpeg, png, jpg.',
             'photo.max' => 'حجم الصورة لا يجب أن يتجاوز 5 ميجابايت.',
+
+            'application_criteria.*.requirment_type.required_with' => 'نوع المعيار مطلوب لكل معيار.',
+            'application_criteria.*.application_criteria_value.required_with' => 'قيمة المعيار مطلوبة.',
+            'application_criteria.*.requirment_type.max' => 'نوع المعيار يجب ألا يزيد عن 20 حرفاً.',
+            'application_criteria.*.application_criteria_value.max' => 'قيمة المعيار يجب ألا تزيد عن 30 حرفاً.',
+            'application_criteria.*.application_criteria_description.max' => 'وصف المعيار يجب ألا يزيد عن 100 حرف.',
+            'reviewer_name.max' => 'اسم المراجع يجب ألا يزيد عن 100 حرف.',
+            'how_to_apply_description.max' => 'وصف كيفية التقديم يجب ألا يزيد عن 400 حرف.',
+            'rating.integer' => 'التقييم يجب أن يكون عدداً صحيحاً.',
+            'rating.min' => 'التقييم لا يجب أن يكون أقل من 1.',
+            'rating.max' => 'التقييم لا يجب أن يكون أكثر من 5.',
+            'review.string' => 'المراجعة يجب أن تكون نصاً.',
         ];
     }
 

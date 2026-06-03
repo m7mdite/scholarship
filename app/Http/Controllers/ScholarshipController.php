@@ -15,6 +15,7 @@ use App\Http\Requests\StoreScholarshipRequest;
 use App\Http\Requests\UpdateScholarshipRequest;
 use Illuminate\Support\Facades\DB;
 use Psy\Readline\Hoa\Console;
+use Illuminate\Support\Facades\Auth;
 
 class ScholarshipController extends Controller
 {
@@ -39,6 +40,7 @@ class ScholarshipController extends Controller
     public function getTopScholarships(Request $request)
     {
         // $user = $request->user();
+        /** @var \App\Models\User|null $user */
         $user = auth('sanctum')->user(); // بدلاً من $request->user()
         
         $today = Carbon::today();
@@ -154,7 +156,7 @@ class ScholarshipController extends Controller
     //     ], 200);
     // }
     // =======================================================================  جلب المنح حسب الدولة (مع الصور والعلاقات)
-    public function getByCountry($countryId)
+    public function getByCountry(int $countryId)
     {
 
         $country = Country::find($countryId);
@@ -215,6 +217,13 @@ class ScholarshipController extends Controller
     // إضافة منحة جديدة (مع صورة اختيارية)
     public function store(StoreScholarshipRequest $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $validated = $request->validated();
 
 
@@ -233,10 +242,34 @@ class ScholarshipController extends Controller
                     'city_id' => $validated['city_id'] ?? null,
                 ]);
             }
+            // إضافة review اختياري
+        if ($request->filled('reviewer_name') && $request->filled('review')) {
+            $scholarship->reviews()->create([
+                'reviewer_name' => $request->reviewer_name,
+                'review' => $request->review,
+                'rating' => $request->rating ?? null,
+            ]);
+        }
+        // إضافة how_to_apply اختياري
+        if ($request->filled('how_to_apply_description')) {
+            $scholarship->howToApply()->create([
+                'how_to_apply_description' => $request->how_to_apply_description,
+            ]);
+        }
+        // إضافة معايير التقديم (application criteria) إن وُجدت
+if ($request->has('application_criteria') && is_array($request->application_criteria)) {
+    foreach ($request->application_criteria as $criteria) {
+        $scholarship->applicationCriteria()->create([
+            'requirment_type' => $criteria['requirment_type'],
+            'application_criteria_value' => $criteria['application_criteria_value'],
+            'application_criteria_description' => $criteria['application_criteria_description'] ?? null,
+        ]);
+    }
+}
 
             DB::commit();
             // تحميل العلاقات لعرضها في الاستجابة
-            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos']);
+            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos', 'reviews', 'howToApply','applicationCriteria']);
 
             return response()->json([
                 'status' => 'success',
@@ -254,7 +287,7 @@ class ScholarshipController extends Controller
     }
 
     // عرض منحة محددة
-    public function show($id)
+    public function show(int $id)
     {
         $scholarship = Scholarship::with([
             'country',
@@ -283,8 +316,15 @@ class ScholarshipController extends Controller
     }
 
     // تحديث منحة
-    public function update(UpdateScholarshipRequest $request, $id)
+    public function update(UpdateScholarshipRequest $request, int $id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $scholarship = Scholarship::find($id);
         if (!$scholarship) {
             return response()->json([
@@ -321,7 +361,7 @@ class ScholarshipController extends Controller
             }
 
             DB::commit();
-            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos']);
+            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos', 'applicationCriteria']);
 
             return response()->json([
                 'status' => 'success',
@@ -339,8 +379,15 @@ class ScholarshipController extends Controller
     }
 
     // حذف منحة
-    public function destroy($id)
+    public function destroy(int $id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $scholarship = Scholarship::find($id);
         if (!$scholarship) {
             return response()->json([
@@ -378,7 +425,7 @@ class ScholarshipController extends Controller
 
 
     // ======================================================================== جلب منح مشابهة (حسب التخصص، ثم المدينة، ثم الدولة، ثم الفئة)
-    public function getSimilarScholarships($id)
+    public function getSimilarScholarships(int $id)
     {
         $scholarship = Scholarship::find($id);
         if (!$scholarship) {
@@ -440,7 +487,7 @@ class ScholarshipController extends Controller
                 $startStatus = 'تبدأ في ' . $startDate->toDateString();
             } elseif ($startDate && $startDate->lte($today)) {
                 $daysRemaining = $today->diffInDays(\Carbon\Carbon::parse($item->finished_date), false);
-                $startStatus = $daysRemaining > 0 ? "تبقت {$daysRemaining} يوم" : 'انتهت الصلاحية';
+                $startStatus = $daysRemaining > 0 ? "تبقى {$daysRemaining} يوم" : 'انتهت الصلاحية';
             } else {
                 $startStatus = 'تاريخ البدء غير محدد';
             }
@@ -502,7 +549,7 @@ class ScholarshipController extends Controller
     }
 
     // دالة مساعدة لحساب حالة البدء
-    private function getStartStatus($scholarship)
+    private function getStartStatus(Scholarship $scholarship): string
     {
         if (!$scholarship->start_date) return 'تاريخ البدء غير محدد';
         $startDate = \Carbon\Carbon::parse($scholarship->start_date);
@@ -511,7 +558,7 @@ class ScholarshipController extends Controller
             return 'تبدأ في ' . $startDate->toDateString();
         } elseif ($startDate->lte($today)) {
             $daysRemaining = $today->diffInDays(\Carbon\Carbon::parse($scholarship->finished_date), false);
-            return $daysRemaining > 0 ? "تبقت {$daysRemaining} يوم" : 'انتهت الصلاحية';
+            return $daysRemaining > 0 ? "تبقى {$daysRemaining} يوم" : 'انتهت الصلاحية';
         }
         return 'تاريخ البدء غير محدد';
     }
@@ -520,14 +567,14 @@ class ScholarshipController extends Controller
 
 
     // دالة مساعدة لتنسيق المنحة بنفس شكل getTopScholarships الأصلي
-    private function formatScholarshipForTop($scholarship, $today)
+    private function formatScholarshipForTop(Scholarship $scholarship, Carbon $today): array
     {
         $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
         if ($startDate && $startDate->isFuture()) {
             $startStatus = 'تبدأ في ' . $startDate->toDateString();
         } elseif ($startDate && $startDate->lte($today)) {
             $daysRemaining = $today->diffInDays(Carbon::parse($scholarship->finished_date), false);
-            $startStatus = $daysRemaining > 0 ? "تبقت {$daysRemaining} يوم" : 'انتهت الصلاحية';
+            $startStatus = $daysRemaining > 0 ? "تبقى {$daysRemaining} يوم" : 'انتهت الصلاحية';
         } else {
             $startStatus = 'تاريخ البدء غير محدد';
         }

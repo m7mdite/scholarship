@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CountryController extends Controller
 {
@@ -21,6 +22,13 @@ class CountryController extends Controller
     // إضافة دولة جديدة
     public function store(Request $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $validated = $request->validate([
             'country_name' => 'required|string|max:30',
             'country_rate' => 'required|numeric',
@@ -56,6 +64,13 @@ class CountryController extends Controller
     // تحديث دولة
     public function update(Request $request, $id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $country = Country::find($id);
         if (!$country) {
             return response()->json([
@@ -82,6 +97,13 @@ class CountryController extends Controller
     // حذف دولة
     public function destroy($id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $country = Country::find($id);
         if (!$country) {
             return response()->json([

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Specialization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SpecializationController extends Controller
 {
@@ -21,6 +22,13 @@ class SpecializationController extends Controller
     // إضافة تخصص جديد
     public function store(Request $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $validated = $request->validate([
             'specialization_name' => 'required|string|max:30',
             'category_id' => 'required|exists:categories,id',
@@ -58,6 +66,13 @@ class SpecializationController extends Controller
     // تحديث تخصص
     public function update(Request $request, $id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $specialization = Specialization::find($id);
         if (!$specialization) {
             return response()->json([
@@ -85,6 +100,13 @@ class SpecializationController extends Controller
     // حذف تخصص
     public function destroy($id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $specialization = Specialization::find($id);
         if (!$specialization) {
             return response()->json([

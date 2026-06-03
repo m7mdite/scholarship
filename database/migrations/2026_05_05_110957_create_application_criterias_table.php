@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('requirment_type', 20);
             $table->string('application_criteria_value', 30);
-            $table->string('application_criteria_description', 100);
+            $table->string('application_criteria_description', 100)->nullable();
             $table->foreignId('scholarship_id')->constrained('scholarships')->onDelete('cascade');
             $table->timestamps();
         });

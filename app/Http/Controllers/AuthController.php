@@ -15,15 +15,14 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:Users,email',
-            'password' => 'required|min:6',
-            'user_created_at' => 'nullable|date', // أو يمكن تركه لاحقاً
+            'password' => 'required|min:6'
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            
+            'created_at' => now(),
             // role ليس موجوداً في $fillable بعد، لكننا سنضيفه لاحقاً
         ]);
         // إنشاء توكن للمستخدم

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Country;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -22,6 +23,13 @@ class CityController extends Controller
     // إنشاء مدينة جديدة
     public function store(Request $request)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $validated = $request->validate([
             'city_name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
@@ -57,6 +65,13 @@ class CityController extends Controller
     // تحديث مدينة
     public function update(Request $request, $id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $city = City::find($id);
         if (!$city) {
             return response()->json([
@@ -83,6 +98,13 @@ class CityController extends Controller
     // حذف مدينة
     public function destroy($id)
     {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+            'data' => null
+        ], 403);
+    }
         $city = City::find($id);
         if (!$city) {
             return response()->json([

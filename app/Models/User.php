@@ -21,10 +21,10 @@ class User extends Authenticatable
 
 
 
-    protected $table = 'Users';
+    protected $table = 'users';
     protected $primaryKey = 'id';
-    public $timestamps = false;
-    const CREATED_AT = 'user_created_at';
+    public $timestamps = true;
+    const CREATED_AT = 'created_at';
     /**
      * The attributes that are mass assignable.
      *
@@ -77,11 +77,15 @@ class User extends Authenticatable
     //     return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id');
     //         // ->withTimestamps();
     // }
-   
-public function favoriteScholarships()
-{
-    return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id')
-        ->withPivot('created_at', 'updated_at')
-        ->withTimestamps('created_at', 'updated_at');
-}
+
+    public function favoriteScholarships()
+    {
+        return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id')
+            ->withPivot('created_at', 'updated_at')
+            ->withTimestamps('created_at', 'updated_at');
+    }
+    public function preferences()
+    {
+        return $this->hasOne(UserPreference::class);
+    }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\FavoriteScholarshipController;
+use App\Http\Controllers\UserPreferenceController;
 // use App\Models\Category;
 
 
@@ -49,6 +50,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/{scholarship}', [FavoriteScholarshipController::class, 'add']);
     Route::delete('/favorites/{scholarship}', [FavoriteScholarshipController::class, 'remove']);
     Route::get('/favorites', [FavoriteScholarshipController::class, 'index']);
+
+    // تفضيلات المستخدم
+    Route::get('/user/preferences', [UserPreferenceController::class, 'show']);
+    Route::post('/user/preferences', [UserPreferenceController::class, 'store']);
+    Route::put('/user/preferences', [UserPreferenceController::class, 'update']);
+    Route::delete('/user/preferences', [UserPreferenceController::class, 'destroy']);
 });
 
 /*

@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserPreference extends Model
 {
-    protected $table = 'user_prefrences';
+    protected $table = 'user_preferences';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $fillable = ['user_id', 'country_id', 'specialization_id', 'degree', 'faviorate_scholarship_id'];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id', 'id');
+    // }
 
     public function country()
     {
@@ -26,8 +26,12 @@ class UserPreference extends Model
         return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
     }
 
-    public function favoriteScholarship()
+    // public function favoriteScholarship()
+    // {
+    //     return $this->belongsTo(FavoriteScholarship::class, 'faviorate_scholarship_id', 'id');
+    // }
+    public function user()
     {
-        return $this->belongsTo(FavoriteScholarship::class, 'faviorate_scholarship_id', 'id');
+        return $this->belongsTo(User::class);
     }
 }

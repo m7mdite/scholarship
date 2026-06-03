@@ -68,6 +68,10 @@ class Scholarship extends Model
     {
         return $this->hasMany(PersonalExperience::class, 'scholarship_id', 'id');
     }
+    public function reviews()
+{
+    return $this->hasMany(Review::class);
+}
 
 
    
