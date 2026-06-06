@@ -30,7 +30,7 @@ class StoreScholarshipRequest extends FormRequest
             'city_id' => 'required|exists:cities,id',
             'specialization_id' => 'required|exists:specializations,id',
             'category_id' => 'required|exists:categories,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'application_criteria' => 'nullable|array',
             'application_criteria.*.requirment_type' => 'required_with:application_criteria|string|max:20',
             'application_criteria.*.application_criteria_value' => 'required_with:application_criteria|string|max:30',

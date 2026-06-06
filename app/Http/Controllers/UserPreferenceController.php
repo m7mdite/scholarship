@@ -43,7 +43,7 @@ class UserPreferenceController extends Controller
         if ($user->preferences) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'التفضيلات موجودة بالفعل، استخدم PUT للتحديث',
+                'message' => " لديك تفضيلات بالفعل يمكنك تعديلها عن طريق put",
             ], 409);
         }
 

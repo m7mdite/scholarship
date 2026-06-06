@@ -11,6 +11,10 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\FavoriteScholarshipController;
 use App\Http\Controllers\UserPreferenceController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CvController;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\Category;
 
 
@@ -89,5 +93,12 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/specializations', [SpecializationController::class, 'index']);
 Route::get('/specializations/{id}', [SpecializationController::class, 'show']);
-
+Route::post('/chat', [ChatController::class, 'handleChat']);
+Route::post('/generate-cv', [CvController::class, 'generateCV']);
+Route::post('/generate-motivation-letter', [CvController::class, 'generateMotivationLetter']);
+Route::post('/generate-recommendation', [CvController::class, 'generateRecommendationLetter']);
+Route::get('/test-pdf', function () {
+    $pdf = Pdf::loadHTML('<h1>Hello</h1>');
+    return $pdf->download('test.pdf');
+});
 // Route::get('/top-scholarships', [ScholarshipController::class, 'getTopScholarships']);

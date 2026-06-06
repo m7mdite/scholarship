@@ -1,22 +1,23 @@
 
-انشاء حساب 
+ ==================================================================  انشاء حساب 
 post: http://127.0.0.1:8000/api/register 
 body={name , email , passowrd}
 
-تسجيل الدخول 
+==================================================================  تسجيل الدخول 
 post: http://127.0.0.1:8000/api/login 
 body={email , passowrd}
 
 
-تسجيل الخروج  (يحتاج توكن)
+==================================================================  تسجيل الخروج  (يحتاج توكن)
 post: http://127.0.0.1:8000/api/logout 
+header ="Authorization: Bearer {token}"
 body={}
 
-الدول 
+ ==================================================================     الدول 
 get,post,delete,put: http://127.0.0.1:8000/api/countries 
 body={country_name,country_rate}
 
-المدن (الجميع للعرض والادمن  للتعديل والعرض والانشاء)
+                                         المدن (الجميع للعرض والادمن  للتعديل والعرض والانشاء)
 get,post,delete,put: http://127.0.0.1:8000/api/cities 
 body={city_name,country_id}
 
@@ -28,7 +29,7 @@ body={category_name}
 get,post,delete,put: http://127.0.0.1:8000/api/specializations
 body={specialization_name , category_id}
 
-المنح (الجميع للعرض والادمن  للتعديل والعرض والانشاء)
+                         المنح (الجميع للعرض والادمن  للتعديل والعرض والانشاء)
 get,post,delete,put: http://127.0.0.1:8000/api/scholarships
 body={scholarship_name,degree,finance,scholarship_description,donar,start_date,finished_date,scholarship_language,scholarship_link,country_id,city_id,specialization_id,category_id,photo}
 

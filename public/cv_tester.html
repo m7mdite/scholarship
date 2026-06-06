@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار إنشاء السيرة الذاتية (CV)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        h1 {
+            color: #1e3a8a;
+            border-right: 4px solid #1e3a8a;
+            padding-right: 15px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 400px;
+            font-family: monospace;
+            font-size: 13px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            direction: ltr;
+            text-align: left;
+        }
+        button {
+            background: #1e3a8a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f0f2f5;
+            display: none;
+        }
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .example {
+            background: #eef2ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        .flex-btns {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📄 إنشاء سيرة ذاتية احترافية (PDF)</h1>
+
+    <div class="example">
+        <strong>📋 مثال على JSON (يمكنك نسخه وتعديله):</strong>
+        <pre style="margin:8px 0 0 0; font-size:12px;">{
+  "language": "arabic",
+  "full_name": "أحمد محمد علي",
+  "email": "ahmed@example.com",
+  "phone": "+966512345678",
+  "languages": ["العربية (لغة أم)", "الإنجليزية (متقدم)"],
+  "skills": ["PHP/Laravel", "React.js", "MySQL", "Git", "REST APIs"],
+  "age": 28,
+  "specialization": "هندسة البرمجيات",
+  "bio": "مطور ويب شغوف بخبرة 5 سنوات في بناء تطبيقات ويب متكاملة باستخدام Laravel و React. أتمتع بمهارات تحليلية قوية وقدرة على العمل ضمن فريق. أسعى إلى تطوير حلول مبتكرة تساهم في نجاح المؤسسات وتحسين تجربة المستخدم."
+}</pre>
+        <button id="fillExample" style="background:#4b5563; margin-top:8px;">استخدم هذا المثال (عربي)</button>
+        <button id="fillExampleEnglish" style="background:#4b5563; margin-top:8px; margin-right:8px;">استخدم مثال إنجليزي</button>
+    </div>
+
+    <label for="jsonInput"><strong>🔧 أدخل بيانات JSON:</strong></label>
+    <textarea id="jsonInput" placeholder='{"language":"arabic","full_name":"..."}'></textarea>
+
+    <div class="flex-btns">
+        <button id="generateBtn">📑 إنشاء السيرة الذاتية (PDF)</button>
+        <button id="clearBtn" style="background:#6b7280;">🗑️ مسح</button>
+    </div>
+
+    <div id="status" class="status"></div>
+    <p style="font-size:12px; color:#6c757d; margin-top:20px;">⚠️ تأكد من أن خادم Laravel يعمل (php artisan serve) على المنفذ 8000.</p>
+</div>
+
+<script>
+    const API_URL = 'http://127.0.0.1:8000/api/generate-cv';
+    const textarea = document.getElementById('jsonInput');
+    const statusDiv = document.getElementById('status');
+
+    // مثال عربي
+    const exampleArabic = {
+        "language": "arabic",
+        "full_name": "أحمد محمد علي",
+        "email": "ahmed@example.com",
+        "phone": "+966512345678",
+        "languages": ["العربية (لغة أم)", "الإنجليزية (متقدم)"],
+        "skills": ["PHP/Laravel", "React.js", "MySQL", "Git", "REST APIs"],
+        "age": 28,
+        "specialization": "هندسة البرمجيات",
+        "bio": "مطور ويب شغوف بخبرة 5 سنوات في بناء تطبيقات ويب متكاملة باستخدام Laravel و React. أتمتع بمهارات تحليلية قوية وقدرة على العمل ضمن فريق. أسعى إلى تطوير حلول مبتكرة تساهم في نجاح المؤسسات وتحسين تجربة المستخدم."
+    };
+
+    // مثال إنجليزي
+    const exampleEnglish = {
+        "language": "english",
+        "full_name": "Ahmed Mohamed Ali",
+        "email": "ahmed@example.com",
+        "phone": "+966512345678",
+        "languages": ["Arabic (Native)", "English (Advanced)"],
+        "skills": ["PHP/Laravel", "React.js", "MySQL", "Git", "REST APIs"],
+        "age": 28,
+        "specialization": "Software Engineering",
+        "bio": "Passionate web developer with 5 years of experience building full-stack web applications using Laravel and React. Strong analytical skills and ability to work in a team. Seeking to develop innovative solutions that contribute to organizational success and improve user experience."
+    };
+
+    document.getElementById('fillExample').addEventListener('click', () => {
+        textarea.value = JSON.stringify(exampleArabic, null, 2);
+    });
+    document.getElementById('fillExampleEnglish').addEventListener('click', () => {
+        textarea.value = JSON.stringify(exampleEnglish, null, 2);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        textarea.value = '';
+        statusDiv.style.display = 'none';
+    });
+
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+        const jsonText = textarea.value.trim();
+        if (!jsonText) {
+            showStatus('الرجاء إدخال بيانات JSON صالحة.', 'error');
+            return;
+        }
+
+        let requestData;
+        try {
+            requestData = JSON.parse(jsonText);
+        } catch (e) {
+            showStatus('JSON غير صالح: ' + e.message, 'error');
+            return;
+        }
+
+        // التحقق من الحقول المطلوبة
+        const required = ['language', 'full_name', 'email', 'languages', 'skills', 'specialization', 'bio'];
+        const missing = required.filter(field => !requestData[field]);
+        if (missing.length) {
+            showStatus(`الحقول المطلوبة مفقودة: ${missing.join(', ')}`, 'error');
+            return;
+        }
+        // التأكد من أن languages و skills عبارة عن مصفوفات
+        if (!Array.isArray(requestData.languages) || requestData.languages.length === 0) {
+            showStatus('languages يجب أن تكون مصفوفة غير فارغة', 'error');
+            return;
+        }
+        if (!Array.isArray(requestData.skills) || requestData.skills.length === 0) {
+            showStatus('skills يجب أن تكون مصفوفة غير فارغة', 'error');
+            return;
+        }
+
+        showStatus('جاري إنشاء السيرة الذاتية ...', 'success');
+        const generateBtn = document.getElementById('generateBtn');
+        generateBtn.disabled = true;
+        generateBtn.textContent = '⏳ جاري التحميل...';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                let errorText = await response.text();
+                throw new Error(`خطأ ${response.status}: ${errorText}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            let filename = `CV_${requestData.full_name.replace(/\s/g, '_')}.pdf`;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            showStatus('✅ تم إنشاء السيرة الذاتية بنجاح! بدء التحميل.', 'success');
+        } catch (err) {
+            console.error(err);
+            showStatus('❌ فشل الاتصال بالخادم: ' + err.message, 'error');
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = '📑 إنشاء السيرة الذاتية (PDF)';
+        }
+    });
+
+    function showStatus(msg, type) {
+        statusDiv.textContent = msg;
+        statusDiv.className = `status ${type}`;
+        statusDiv.style.display = 'block';
+        if (type !== 'error') {
+            setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+        }
+    }
+</script>
+</body>
+</html>
