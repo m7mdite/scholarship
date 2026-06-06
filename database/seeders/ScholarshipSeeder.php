@@ -89,8 +89,8 @@ class ScholarshipSeeder extends Seeder
             $specialization = $specializations->random();
             $category = $categories->random();
 
-            $degree = $faker->randomElement(['بكالوريوس', 'ماجستير', 'دكتوراه']);
-            $finance = $faker->randomElement(['ممولة بالكامل', 'جزئية', 'بدون']);
+            $degree = $faker->randomElement(['بكالوريوس', 'ثانوية عامة', 'ماجستير', 'دكتوراه']);
+            $finance = $faker->randomElement(['ممولة بالكامل', 'ممولة جزئياً', 'غير ممولة']);
             $startDate = $faker->dateTimeBetween('now', '+6 months')->format('Y-m-d');
             $endDate = $faker->dateTimeBetween('+6 months', '+2 years')->format('Y-m-d');
 
