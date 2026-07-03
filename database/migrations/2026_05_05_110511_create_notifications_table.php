@@ -9,21 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('scholarship_id')->constrained('scholarships')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('type')->default('info'); // 'info', 'success', 'warning', 'error'
+            $table->string('title');
+            $table->text('body');
+            $table->json('data')->nullable(); // بيانات إضافية (مثل رابط المنحة)
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('notifications');
     }

@@ -6,12 +6,18 @@ namespace App\Models;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Scholarship[] $favoriteScholarships
  */
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Notification;
+
 use Database\Factories\UserFactory;
 use Illuminate\Auth\Authenticatable as AuthAuthenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
+ */
 
 class User extends Authenticatable
 {
@@ -87,5 +93,9 @@ class User extends Authenticatable
     public function preferences()
     {
         return $this->hasOne(UserPreference::class);
+    }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

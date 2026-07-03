@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Models\Category;
 use App\Models\City;
+use App\Models\User;
 use App\Models\Country;
 use App\Models\Scholarship;
 use App\Models\Specialization;
@@ -37,123 +38,53 @@ class ScholarshipController extends Controller
             'data' => $scholarships
         ], 200);
     }
-    // ======================================================================= جلب أول 15 منحة نشطة مع معلومات مختصرة (للصفحة الرئيسية)
-    // public function getTopScholarships(Request $request)
-    // {
-        // $user = $request->user();
-        // /** @var \App\Models\User|null $user */
-        // $user = auth('sanctum')->user(); // بدلاً من $request->user()
-        
-    //     $today = Carbon::today();
-    //     Log::info('User ID: ' . ($user ? $user->id : 'null'));
-    //     Log::info('User: ', [$user ? $user->id : 'null']);
-    //     // \Log::info('Favorite count: ' . ($user ? $user->favoriteScholarships()->count() : 'no user'));
-    //     // إذا كان المستخدم مسجلاً ولديه منح مفضلة
-    //     if ($user && $user->favoriteScholarships()->count() > 0) {
-    //         // echo "User ID: " . $user->id . "\n";
-    //         // dd("User ID: " . $user->id);
-            
-
-    //         // الحصول على IDs التخصصات والدول والمدن والفئات من مفضلات المستخدم
-    //         $favorites = $user->favoriteScholarships;
-    //         $specializationIds = $favorites->pluck('specialization_id')->unique()->toArray();
-    //         $countryIds = $favorites->pluck('country_id')->unique()->toArray();
-    //         $cityIds = $favorites->pluck('city_id')->unique()->toArray();
-    //         $categoryIds = $favorites->pluck('category_id')->unique()->toArray();
-
-    //         // استعلام متقدم للمنح المشابهة (الأولوية للتخصص ثم الدولة ثم المدينة ثم الفئة)
-    //         $similarScholarships = Scholarship::with(['city', 'specialization', 'photos'])
-    //             ->where('finished_date', '>=', $today)
-    //             // ->whereNotIn('id', $favorites->pluck('id')) // استبعاد المنح المفضلة نفسها
-    //             ->where(function ($query) use ($specializationIds, $countryIds, $cityIds, $categoryIds) {
-    //                 $query->whereIn('specialization_id', $specializationIds)
-    //                     ->orWhereIn('country_id', $countryIds)
-    //                     ->orWhereIn('city_id', $cityIds)
-    //                     ->orWhereIn('category_id', $categoryIds);
-    //             })
-    //             ->orderByRaw("
-    //             CASE 
-    //                 WHEN specialization_id IN (" . implode(',', $specializationIds) . ") THEN 1
-    //                 WHEN country_id IN (" . implode(',', $countryIds) . ") THEN 2
-    //                 WHEN city_id IN (" . implode(',', $cityIds) . ") THEN 3
-    //                 WHEN category_id IN (" . implode(',', $categoryIds) . ") THEN 4
-    //                 ELSE 5
-    //             END
-    //         ")
-    //             ->take(15)
-    //             ->get();
-
-    //         $scholarships = $similarScholarships->map(function ($scholarship) use ($today) {
-    //             return $this->formatScholarshipForTop($scholarship, $today);
-    //         });
-
-    //         $message = 'تم جلب منح مقترحة بناءً على مفضلاتك';
-    //     } else {
-    //         // السلوك الأصلي: أحدث 15 منحة نشطة
-    //         $scholarships = Scholarship::with(['city', 'specialization', 'photos'])
-    //             ->where('finished_date', '>=', $today)
-    //             ->orderBy('id', 'desc')
-    //             ->take(15)
-    //             ->get()
-    //             ->map(function ($scholarship) use ($today) {
-    //                 return $this->formatScholarshipForTop($scholarship, $today);
-    //             });
-    //         $message = 'تم جلب أحدث 15 منحة بنجاح';
-    //     }
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => $message,
-    //         'count' => $scholarships->count(),
-    //         'data' => $scholarships
-    //     ], 200);
-    // }
 
 
-    
+    // =====================================================================================================
+    //    جلب المنح المميزة  مع دعم الفلاتر والاقتراحات الشخصية
+    // =====================================================================================================
+    public function getTopScholarships(Request $request)
+    {
 
-public function getTopScholarships(Request $request)
-{
-    
-    /** @var \App\Models\User|null $user */
-        $user = auth('sanctum')->user(); 
-    $today = Carbon::today();
-    
-    // إعدادات pagination من الطلب
-    $perPage = (int) $request->input('per_page', 15);  // عدد النتائج في الصفحة (افتراضي 15)
-    $page = (int) $request->input('page', 1);
-    
-    // قراءة الفلاتر من الطلب
-    $filters = [
-        'country_id' => $request->input('country'),
-        'category_id' => $request->input('category'),
-        'degree' => $request->input('degree'),
-        'finance' => $request->input('finance'),
-    ];
-    // إزالة الفلاتر الفارغة
-    $filters = array_filter($filters, fn($v) => !is_null($v) && $v !== '' && $v !== 0);
-    
-    // إذا كان المستخدم مسجلاً ولديه مفضلات ولم يتم إرسال أي فلتر -> نستخدم المنح المقترحة
-    $usePersonalized = ($user && $user->favoriteScholarships()->count() > 0 && empty($filters));
-    
-    if ($usePersonalized) {
-        // نفس المنطق القديم: اقتراحات بناءً على مفضلات المستخدم
-        $favorites = $user->favoriteScholarships;
-        $specializationIds = $favorites->pluck('specialization_id')->unique()->toArray();
-        $countryIds = $favorites->pluck('country_id')->unique()->toArray();
-        $cityIds = $favorites->pluck('city_id')->unique()->toArray();
-        $categoryIds = $favorites->pluck('category_id')->unique()->toArray();
-        
-        $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
-            ->where('finished_date', '>=', $today)
-            ->whereNotIn('id', $favorites->pluck('id'))
-            ->where(function ($q) use ($specializationIds, $countryIds, $cityIds, $categoryIds) {
-                $q->whereIn('specialization_id', $specializationIds)
-                  ->orWhereIn('country_id', $countryIds)
-                  ->orWhereIn('city_id', $cityIds)
-                  ->orWhereIn('category_id', $categoryIds);
-            })
-            ->orderByRaw("
+        /** @var \App\Models\User|null $user */
+        $user = auth('sanctum')->user();
+        $today = Carbon::today();
+
+        // إعدادات pagination من الطلب
+        $perPage = (int) $request->input('per_page', 15);  // عدد النتائج في الصفحة (افتراضي 15)
+        $page = (int) $request->input('page', 1);
+
+        // قراءة الفلاتر من الطلب
+        $filters = [
+            'country_id' => $request->input('country'),
+            'category_id' => $request->input('category'),
+            'degree' => $request->input('degree'),
+            'finance' => $request->input('finance'),
+        ];
+        // إزالة الفلاتر الفارغة
+        $filters = array_filter($filters, fn($v) => !is_null($v) && $v !== '' && $v !== 0);
+
+        // إذا كان المستخدم مسجلاً ولديه مفضلات ولم يتم إرسال أي فلتر -> نستخدم المنح المقترحة
+        $usePersonalized = ($user && $user->favoriteScholarships()->count() > 0 && empty($filters));
+
+        if ($usePersonalized) {
+            // نفس المنطق القديم: اقتراحات بناءً على مفضلات المستخدم
+            $favorites = $user->favoriteScholarships;
+            $specializationIds = $favorites->pluck('specialization_id')->unique()->toArray();
+            $countryIds = $favorites->pluck('country_id')->unique()->toArray();
+            $cityIds = $favorites->pluck('city_id')->unique()->toArray();
+            $categoryIds = $favorites->pluck('category_id')->unique()->toArray();
+
+            $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
+                ->where('finished_date', '>=', $today)
+                ->whereNotIn('id', $favorites->pluck('id'))
+                ->where(function ($q) use ($specializationIds, $countryIds, $cityIds, $categoryIds) {
+                    $q->whereIn('specialization_id', $specializationIds)
+                        ->orWhereIn('country_id', $countryIds)
+                        ->orWhereIn('city_id', $cityIds)
+                        ->orWhereIn('category_id', $categoryIds);
+                })
+                ->orderByRaw("
                 CASE 
                     WHEN specialization_id IN (" . implode(',', $specializationIds) . ") THEN 1
                     WHEN country_id IN (" . implode(',', $countryIds) . ") THEN 2
@@ -162,127 +93,80 @@ public function getTopScholarships(Request $request)
                     ELSE 5
                 END
             ");
-        $message = 'تم جلب منح مقترحة بناءً على مفضلاتك';
-    } else {
-        // المنح العادية (مع أو بدون فلاتر)
-        $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
-            ->where('finished_date', '>=', $today)
-            ->orderBy('id', 'desc');
-        
-        // تطبيق الفلاتر إذا وجدت
-        if (!empty($filters)) {
-            foreach ($filters as $column => $value) {
-                if ($column === 'degree' || $column === 'finance') {
-                    $query->where($column, $value);
-                } elseif ($column === 'country_id') {
-                    $query->where('country_id', $value);
-                } elseif ($column === 'category_id') {
-                    $query->where('category_id', $value);
+            $message = 'تم جلب منح مقترحة بناءً على مفضلاتك';
+        } else {
+            // المنح العادية (مع أو بدون فلاتر)
+            $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
+                ->where('finished_date', '>=', $today)
+                ->orderBy('id', 'desc');
+
+            // تطبيق الفلاتر إذا وجدت
+            if (!empty($filters)) {
+                foreach ($filters as $column => $value) {
+                    if ($column === 'degree' || $column === 'finance') {
+                        $query->where($column, $value);
+                    } elseif ($column === 'country_id') {
+                        $query->where('country_id', $value);
+                    } elseif ($column === 'category_id') {
+                        $query->where('category_id', $value);
+                    }
                 }
+                $message = 'تم جلب المنح حسب الفلتر';
+            } else {
+                $message = 'تم جلب أحدث المنح';
             }
-            $message = 'تم جلب المنح حسب الفلتر';
-        } else {
-            $message = 'تم جلب أحدث المنح';
         }
+
+        // تنفيذ paginate
+        $scholarships = $query->paginate($perPage, ['*'], 'page', $page);
+
+        // تنسيق البيانات كما في السابق (map)
+        $formatted = $scholarships->getCollection()->map(function ($scholarship) use ($today) {
+            // حساب start_status (نفس الكود القديم)
+            $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
+            if ($startDate && $startDate->isFuture()) {
+                $startStatus = 'تبدأ في ' . $startDate->toDateString();
+            } elseif ($startDate && $startDate->lte($today)) {
+                $daysRemaining = $today->diffInDays(Carbon::parse($scholarship->finished_date), false);
+                $startStatus = $daysRemaining > 0 ? "تبقت {$daysRemaining} يوم" : 'انتهت الصلاحية';
+            } else {
+                $startStatus = 'تاريخ البدء غير محدد';
+            }
+
+            $photoUrl = $scholarship->photos->isNotEmpty() ? url($scholarship->photos->first()->image_path) : null;
+
+            return [
+                'id' => $scholarship->id,
+                'scholarship_name' => $scholarship->scholarship_name,
+                'finance' => $scholarship->finance,
+                'degree' => $scholarship->degree,
+                'city_name' => $scholarship->city->city_name ?? null,
+                'specialization_name' => $scholarship->specialization->specialization_name ?? null,
+                'start_status' => $startStatus,
+                'photo_url' => $photoUrl,
+            ];
+        });
+
+        // إعادة بناء paginator بالبيانات المنسقة
+        $paginatedData = new LengthAwarePaginator(
+            $formatted,
+            $scholarships->total(),
+            $scholarships->perPage(),
+            $scholarships->currentPage(),
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'data' => $paginatedData
+        ], 200);
     }
-    
-    // تنفيذ paginate
-    $scholarships = $query->paginate($perPage, ['*'], 'page', $page);
-    
-    // تنسيق البيانات كما في السابق (map)
-    $formatted = $scholarships->getCollection()->map(function ($scholarship) use ($today) {
-        // حساب start_status (نفس الكود القديم)
-        $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
-        if ($startDate && $startDate->isFuture()) {
-            $startStatus = 'تبدأ في ' . $startDate->toDateString();
-        } elseif ($startDate && $startDate->lte($today)) {
-            $daysRemaining = $today->diffInDays(Carbon::parse($scholarship->finished_date), false);
-            $startStatus = $daysRemaining > 0 ? "تبقت {$daysRemaining} يوم" : 'انتهت الصلاحية';
-        } else {
-            $startStatus = 'تاريخ البدء غير محدد';
-        }
-        
-        $photoUrl = $scholarship->photos->isNotEmpty() ? url($scholarship->photos->first()->image_path) : null;
-        
-        return [
-            'id' => $scholarship->id,
-            'scholarship_name' => $scholarship->scholarship_name,
-            'finance' => $scholarship->finance,
-            'degree' => $scholarship->degree,
-            'city_name' => $scholarship->city->city_name ?? null,
-            'specialization_name' => $scholarship->specialization->specialization_name ?? null,
-            'start_status' => $startStatus,
-            'photo_url' => $photoUrl,
-        ];
-    });
-    
-    // إعادة بناء paginator بالبيانات المنسقة
-    $paginatedData = new LengthAwarePaginator(
-        $formatted,
-        $scholarships->total(),
-        $scholarships->perPage(),
-        $scholarships->currentPage(),
-        ['path' => LengthAwarePaginator::resolveCurrentPath()]
-    );
-    
-    return response()->json([
-        'status' => 'success',
-        'message' => $message,
-        'data' => $paginatedData
-    ], 200);
-}
 
 
-
-    // public function getTopScholarships()
-    // {
-    //     $today = Carbon::today();
-
-    //     $scholarships = Scholarship::with(['city', 'specialization', 'photos'])
-    //         ->where('finished_date', '>=', $today) // فقط المنح التي لم تنتهِ
-    //         ->orderBy('id', 'desc') // أحدث المنح أولاً
-    //         ->take(15)
-    //         ->get()
-    //         ->map(function ($scholarship) use ($today) {
-    //             // حساب حالة تاريخ البدء
-    //             $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
-    //             if ($startDate && $startDate->isFuture()) {
-    //                 $startStatus = 'تبدأ في ' . $startDate->toDateString();
-    //             } elseif ($startDate && $startDate->lte($today)) {
-    //                 $daysRemaining = $today->diffInDays(Carbon::parse($scholarship->finished_date), false);
-    //                 // بما أن finished_date >= اليوم، فالباقي موجب
-    //                 $startStatus = 'متبقي ' . $daysRemaining . ' يوم';
-    //             } else {
-    //                 $startStatus = 'تاريخ البدء غير محدد';
-    //             }
-
-    //             // الحصول على أول صورة إن وجدت
-    //             $photoUrl = null;
-    //             if ($scholarship->photos->isNotEmpty()) {
-    //                 $photoPath = $scholarship->photos->first()->image_path;
-    //                 // إذا كان المسار يبدأ بـ /storage/ أو كان متوقعاً
-    //                 $photoUrl = url($photoPath); // أو asset($photoPath)
-    //             }
-
-    //             return [
-    //                 'id' => $scholarship->id,
-    //                 'scholarship_name' => $scholarship->scholarship_name,
-    //                 'finance' => $scholarship->finance,
-    //                 'degree' => $scholarship->degree,
-    //                 'city_name' => $scholarship->city->city_name ?? null,
-    //                 'specialization_name' => $scholarship->specialization->specialization_name ?? null,
-    //                 'start_status' => $startStatus,
-    //                 'photo_url' => $photoUrl,
-    //             ];
-    //         });
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'تم جلب أول 15 منحة بنجاح',
-    //         'data' => $scholarships
-    //     ], 200);
-    // }
-    // =======================================================================  جلب المنح حسب الدولة (مع الصور والعلاقات)
+    // ===========================================================================================================
+    // جلب المنح حسب الدولة 
+    // ========================================================================================================
     public function getByCountry(int $countryId)
     {
 
@@ -342,15 +226,20 @@ public function getTopScholarships(Request $request)
 
     // ======================================================================= اضافة منحة جديدة (بدون صورة)
     // إضافة منحة جديدة (مع صورة اختيارية)
+
+
+    // ========================================================================================================
+    // إضافة منحة جديدة
+    // ===================================================================================================
     public function store(StoreScholarshipRequest $request)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
         $validated = $request->validated();
 
 
@@ -370,33 +259,34 @@ public function getTopScholarships(Request $request)
                 ]);
             }
             // إضافة review اختياري
-        if ($request->filled('reviewer_name') && $request->filled('review')) {
-            $scholarship->reviews()->create([
-                'reviewer_name' => $request->reviewer_name,
-                'review' => $request->review,
-                'rating' => $request->rating ?? null,
-            ]);
-        }
-        // إضافة how_to_apply اختياري
-        if ($request->filled('how_to_apply_description')) {
-            $scholarship->howToApply()->create([
-                'how_to_apply_description' => $request->how_to_apply_description,
-            ]);
-        }
-        // إضافة معايير التقديم (application criteria) إن وُجدت
-if ($request->has('application_criteria') && is_array($request->application_criteria)) {
-    foreach ($request->application_criteria as $criteria) {
-        $scholarship->applicationCriteria()->create([
-            'requirment_type' => $criteria['requirment_type'],
-            'application_criteria_value' => $criteria['application_criteria_value'],
-            'application_criteria_description' => $criteria['application_criteria_description'] ?? null,
-        ]);
-    }
-}
+            if ($request->filled('reviewer_name') && $request->filled('review')) {
+                $scholarship->reviews()->create([
+                    'reviewer_name' => $request->reviewer_name,
+                    'review' => $request->review,
+                    'rating' => $request->rating ?? null,
+                ]);
+            }
+            // إضافة how_to_apply اختياري
+            if ($request->filled('how_to_apply_description')) {
+                $scholarship->howToApply()->create([
+                    'how_to_apply_description' => $request->how_to_apply_description,
+                ]);
+            }
+            // إضافة معايير التقديم (application criteria) إن وُجدت
+            if ($request->has('application_criteria') && is_array($request->application_criteria)) {
+                foreach ($request->application_criteria as $criteria) {
+                    $scholarship->applicationCriteria()->create([
+                        'requirment_type' => $criteria['requirment_type'],
+                        'application_criteria_value' => $criteria['application_criteria_value'],
+                        'application_criteria_description' => $criteria['application_criteria_description'] ?? null,
+                    ]);
+                }
+            }
+            $this->sendNotificationsToMatchingUsers($scholarship);
 
             DB::commit();
             // تحميل العلاقات لعرضها في الاستجابة
-            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos', 'reviews', 'howToApply','applicationCriteria']);
+            $scholarship->load(['country', 'city', 'specialization', 'category', 'photos', 'reviews', 'howToApply', 'applicationCriteria']);
 
             return response()->json([
                 'status' => 'success',
@@ -413,7 +303,9 @@ if ($request->has('application_criteria') && is_array($request->application_crit
         }
     }
 
+    // ==============================================================================================================================
     // عرض منحة محددة
+    // =============================================================================================================================
     public function show(int $id)
     {
         $scholarship = Scholarship::with([
@@ -442,16 +334,19 @@ if ($request->has('application_criteria') && is_array($request->application_crit
         ], 200);
     }
 
-    // تحديث منحة
+
+    // =============================================================================================================================
+    //                                                      تحديث منحة
+    // =============================================================================================================================
     public function update(UpdateScholarshipRequest $request, int $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
         $scholarship = Scholarship::find($id);
         if (!$scholarship) {
             return response()->json([
@@ -504,17 +399,18 @@ if ($request->has('application_criteria') && is_array($request->application_crit
             ], 500);
         }
     }
-
-    // حذف منحة
+    // ==============================================================================================================================
+    //                                                   حذف منحة
+    // =============================================================================================================================
     public function destroy(int $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
         $scholarship = Scholarship::find($id);
         if (!$scholarship) {
             return response()->json([
@@ -551,7 +447,9 @@ if ($request->has('application_criteria') && is_array($request->application_crit
     }
 
 
-    // ======================================================================== جلب منح مشابهة (حسب التخصص، ثم المدينة، ثم الدولة، ثم الفئة)
+    // ==============================================================================================
+    // جلب منح مشابهة لمنحة معينة بناءً على التخصص، ثم المدينة، ثم الدولة، ثم الفئة
+    // =====================================================================================
     public function getSimilarScholarships(int $id)
     {
         $scholarship = Scholarship::find($id);
@@ -641,82 +539,60 @@ if ($request->has('application_criteria') && is_array($request->application_crit
         ], 200);
     }
 
-    // =====================================
 
-    // (إضافي) جلب أول 15 منحة نشطة مع معلومات مختصرة (للصفحة الرئيسية)
-    public function topScholarships()
+
+
+    
+    // ==========================================================================================
+    // ارسال إشعارات للمستخدمين الذين لديهم تفضيلات مطابقة للمنحة
+    // =========================================================================================
+    private function sendNotificationsToMatchingUsers($scholarship)
     {
-        $today = now()->toDateString();
-
-        $scholarships = Scholarship::with(['city', 'specialization', 'photos'])
-            ->where('finished_date', '>=', $today)
-            ->orderBy('id', 'desc')
-            ->take(15)
-            ->get()
-            ->map(function ($scholarship) {
-                $photoUrl = $scholarship->photos->isNotEmpty() ? $scholarship->photos->first()->image_path : null;
-                $startStatus = $this->getStartStatus($scholarship);
-                return [
-                    'id' => $scholarship->id,
-                    'scholarship_name' => $scholarship->scholarship_name,
-                    'finance' => $scholarship->finance,
-                    'degree' => $scholarship->degree,
-                    'city_name' => $scholarship->city->city_name ?? null,
-                    'specialization_name' => $scholarship->specialization->specialization_name ?? null,
-                    'start_status' => $startStatus,
-                    'photo_url' => $photoUrl,
-                ];
+        // جلب جميع المستخدمين الذين لديهم تفضيلات
+        $users = User::whereHas('preferences', function ($query) use ($scholarship) {
+            $query->where(function ($q) use ($scholarship) {
+                // مطابقة الاختصاص
+                if ($scholarship->specialization_id) {
+                    $q->orWhere('specialization_id', $scholarship->specialization_id);
+                }
+                // مطابقة الدولة
+                if ($scholarship->country_id) {
+                    $q->orWhere('country_id', $scholarship->country_id);
+                }
+                // مطابقة الدرجة
+                if ($scholarship->degree) {
+                    $q->orWhere('degree', $scholarship->degree);
+                }
+                // مطابقة الفئة (من خلال التخصص)
+                if ($scholarship->category_id) {
+                    $q->orWhereHas('specialization', function ($sq) use ($scholarship) {
+                        $sq->where('category_id', $scholarship->category_id);
+                    });
+                }
             });
+        })->with('preferences')->get();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'تم جلب أول 15 منحة بنجاح',
-            'data' => $scholarships
-        ], 200);
-    }
-
-    // دالة مساعدة لحساب حالة البدء
-    private function getStartStatus(Scholarship $scholarship): string
-    {
-        if (!$scholarship->start_date) return 'تاريخ البدء غير محدد';
-        $startDate = \Carbon\Carbon::parse($scholarship->start_date);
-        $today = \Carbon\Carbon::today();
-        if ($startDate->isFuture()) {
-            return 'تبدأ في ' . $startDate->toDateString();
-        } elseif ($startDate->lte($today)) {
-            $daysRemaining = $today->diffInDays(\Carbon\Carbon::parse($scholarship->finished_date), false);
-            return $daysRemaining > 0 ? "تبقى {$daysRemaining} يوم" : 'انتهت الصلاحية';
-        }
-        return 'تاريخ البدء غير محدد';
-    }
-
-
-
-
-    // دالة مساعدة لتنسيق المنحة بنفس شكل getTopScholarships الأصلي
-    private function formatScholarshipForTop(Scholarship $scholarship, Carbon $today): array
-    {
-        $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
-        if ($startDate && $startDate->isFuture()) {
-            $startStatus = 'تبدأ في ' . $startDate->toDateString();
-        } elseif ($startDate && $startDate->lte($today)) {
-            $daysRemaining = $today->diffInDays(Carbon::parse($scholarship->finished_date), false);
-            $startStatus = $daysRemaining > 0 ? "تبقى {$daysRemaining} يوم" : 'انتهت الصلاحية';
-        } else {
-            $startStatus = 'تاريخ البدء غير محدد';
+        if ($users->isEmpty()) {
+            return;
         }
 
-        $photoUrl = $scholarship->photos->isNotEmpty() ? url($scholarship->photos->first()->image_path) : null;
+        $sentCount = 0;
+        foreach ($users as $user) {
+            NotificationController::create(
+                $user->id,
+                'info',
+                '📢 منحة جديدة تناسب اهتماماتك!',
+                "تم إضافة منحة جديدة: {$scholarship->scholarship_name} في تخصص {$scholarship->specialization->specialization_name}",
+                [
+                    'scholarship_id' => $scholarship->id,
+                    'scholarship_name' => $scholarship->scholarship_name,
+                    'link' => '/scholarships/' . $scholarship->id,
+                ]
+            );
+            $sentCount++;
+        }
 
-        return [
-            'id' => $scholarship->id,
-            'scholarship_name' => $scholarship->scholarship_name,
-            'finance' => $scholarship->finance,
-            'degree' => $scholarship->degree,
-            'city_name' => $scholarship->city->city_name ?? null,
-            'specialization_name' => $scholarship->specialization->specialization_name ?? null,
-            'start_status' => $startStatus,
-            'photo_url' => $photoUrl,
-        ];
+        // تسجيل عدد الإشعارات المرسلة (اختياري)
+        Log::info("تم إرسال {$sentCount} إشعار للمستخدمين المطابقين للمنحة: {$scholarship->id}");
     }
 }

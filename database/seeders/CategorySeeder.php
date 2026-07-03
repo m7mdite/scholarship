@@ -10,6 +10,13 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
+
+
+            ['category_name' => 'IT'],
+            ['category_name' => 'إقتصاد'],
+            ['category_name' => 'العمارة'],
+            ['category_name' => 'اللغات الأجنبية'],
+            ['category_name' => 'العلوم'],
             ['category_name' => 'تكنولوجيا المعلومات'],
             ['category_name' => 'الهندسة'],
             ['category_name' => 'الطب والعلوم الصحية'],

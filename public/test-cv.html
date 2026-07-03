@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار توليد السيرة الذاتية (PDF)</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f5f7fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: white; max-width: 700px; width: 100%; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        textarea { resize: vertical; min-height: 80px; }
+        .row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .row .form-group { flex: 1; min-width: 180px; }
+        .btn { background: #3498db; color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 18px; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn:hover { background: #2980b9; }
+        .btn:disabled { background: #95a5a6; cursor: not-allowed; }
+        #status { margin-top: 20px; padding: 12px; border-radius: 8px; display: none; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-left: 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📄 توليد السيرة الذاتية (PDF)</h2>
+    <form id="cvForm">
+        <!-- اللغة -->
+        <div class="form-group">
+            <label>🌐 اللغة</label>
+            <select name="language" id="language">
+                <option value="arabic" >العربية</option>
+                <option value="english" selected>English</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>👤 الاسم الكامل</label>
+                <input type="text" name="full_name" value="mohammed sadiq awad" required>
+            </div>
+            <div class="form-group">
+                <label>📧 البريد الإلكتروني</label>
+                <input type="email" name="email" value="m@example.com" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>📞 رقم الهاتف</label>
+                <input type="text" name="phone" value="+963957863599">
+            </div>
+            <div class="form-group">
+                <label>🎂 العمر</label>
+                <input type="number" name="age" value="60" min="16" max="1000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>🎓 التخصص</label>
+            <input type="text" name="specialization" value="Software Engineering" required>
+        </div>
+
+        <div class="form-group">
+            <label>📝 نبذة عنك (Bio)</label>
+            <textarea name="bio" required>I am a passionate web developer with 5 years of experience building full-stack web applications. I love solving problems and learning new technologies. I seek to work in an advanced technological environment where I can develop my skills and contribute to building excellent digital products.</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>🗣️ اللغات (اكتب كل لغة في سطر منفصل)</label>
+            <textarea name="languages" rows="2">Arabic (Native)
+English (Advanced)</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>💻 المهارات (اكتب كل مهارة في سطر منفصل)</label>
+            <textarea name="skills" rows="4">PHP/Laravel Programming
+React.js
+MySQL Databases
+Project Management</textarea>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">🚀 إرسال و تحميل PDF</button>
+    </form>
+
+    <div id="status"></div>
+</div>
+
+<script>
+    document.getElementById('cvForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const statusDiv = document.getElementById('status');
+        const submitBtn = document.getElementById('submitBtn');
+        statusDiv.style.display = 'none';
+        statusDiv.className = '';
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ جاري التحميل... <span class="spinner"></span>';
+
+        // جمع البيانات من النموذج
+        const formData = new FormData(this);
+        const data = {
+            language: formData.get('language'),
+            full_name: formData.get('full_name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            age: parseInt(formData.get('age')) || undefined,
+            specialization: formData.get('specialization'),
+            bio: formData.get('bio'),
+            languages: formData.get('languages').split('\n').map(s => s.trim()).filter(s => s !== ''),
+            skills: formData.get('skills').split('\n').map(s => s.trim()).filter(s => s !== '')
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/generate-cv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/pdf, application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            // التحقق من نوع المحتوى
+            const contentType = response.headers.get('Content-Type') || '';
+
+            if (contentType.includes('application/pdf')) {
+                // نجاح: استلام ملف PDF
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `CV_${data.full_name.replace(/[^A-Za-z0-9]/g, '_')}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                statusDiv.className = 'success';
+                statusDiv.textContent = '✅ تم تحميل ملف PDF بنجاح! ابحث عنه في مجلد التحميلات.';
+                statusDiv.style.display = 'block';
+            } else {
+                // ربما استجابة JSON (خطأ)
+                const errorText = await response.text();
+                let errorMsg = 'حدث خطأ غير متوقع.';
+                try {
+                    const json = JSON.parse(errorText);
+                    errorMsg = json.message || json.error || errorText;
+                } catch {
+                    errorMsg = errorText || 'خطأ في الاستجابة.';
+                }
+                throw new Error(errorMsg);
+            }
+        } catch (error) {
+            statusDiv.className = 'error';
+            statusDiv.textContent = '❌ ' + error.message;
+            statusDiv.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '🚀 إرسال و تحميل PDF';
+        }
+    });
+</script>
+</body>
+</html>

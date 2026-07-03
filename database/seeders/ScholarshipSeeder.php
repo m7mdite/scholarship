@@ -174,11 +174,11 @@ class ScholarshipSeeder extends Seeder
         // إذا كانت الجداول فارغة، نقوم بإنشاء بيانات أساسية بسيطة
         if (Country::count() == 0) {
             $countries = [
-                ['country_name' => 'سوريا', 'country_rate' => 85],
-                ['country_name' => 'مصر', 'country_rate' => 90],
-                ['country_name' => 'السعودية', 'country_rate' => 92],
-                ['country_name' => 'الإمارات', 'country_rate' => 94],
-                ['country_name' => 'الأردن', 'country_rate' => 88],
+                ['country_name' => 'إيطاليا', 'country_rate' => 85],
+                ['country_name' => 'ألمانيا', 'country_rate' => 90],
+                ['country_name' => 'روسيا', 'country_rate' => 92],
+                ['country_name' => 'رومانيا', 'country_rate' => 94],
+                ['country_name' => 'هنغاريا', 'country_rate' => 88],
                 ['country_name' => 'تركيا', 'country_rate' => 91],
                 ['country_name' => 'ألمانيا', 'country_rate' => 98],
                 ['country_name' => 'بريطانيا', 'country_rate' => 97],

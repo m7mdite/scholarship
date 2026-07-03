@@ -13,11 +13,16 @@ use App\Http\Controllers\FavoriteScholarshipController;
 use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
+use App\Http\Controllers\NotificationController;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\Category;
 
+use App\Http\Controllers\AdminStatsController;
 
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/admin/stats', [AdminStatsController::class, 'index']);
+});
 
 
 /*
@@ -60,6 +65,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/preferences', [UserPreferenceController::class, 'store']);
     Route::put('/user/preferences', [UserPreferenceController::class, 'update']);
     Route::delete('/user/preferences', [UserPreferenceController::class, 'destroy']);
+
+    // الإشعارات
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread', [NotificationController::class, 'unread']);
+    Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
 });
 
 /*
@@ -81,6 +93,11 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
     // إدارة التخصصات
     Route::apiResource('specializations', SpecializationController::class)->except(['index', 'show']);
+
+    
+
+
+    Route::post('/notifications/send-to-all', [NotificationController::class, 'sendToAll']);
 });
 
 // ملاحظة: دوال index و show للموارد المذكورة أعلاه قد تم تعريفها ضمن المسارات العامة (أو يمكنك تعريفها بشكل صريح)

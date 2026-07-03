@@ -18,7 +18,7 @@ class UserPreferenceController extends Controller
     // جلب تفضيلات المستخدم الحالي
     public function show()
     {
-        $preferences = Auth::user()->preferences;
+        $preferences = Auth::user()->preferences->with(['country', 'specialization'])->first();
         if (!$preferences) {
             return response()->json([
                 'status' => 'success',
