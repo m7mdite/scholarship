@@ -10,10 +10,10 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\FavoriteScholarshipController;
-use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\NotificationController;
+use App\Events\TestNotification;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\Category;
@@ -45,12 +45,19 @@ Route::get('/top-scholarships', [ScholarshipController::class, 'getTopScholarshi
 Route::get('/scholarships/{id}/similar', [ScholarshipController::class, 'getSimilarScholarships']);
 Route::get('/scholarships/country/{countryId}', [ScholarshipController::class, 'getByCountry']);
 
+
+Route::get('/test-broadcast', function () {
+    event(new TestNotification('هذه رسالة اختبار من Reverb!'));
+    return 'تم بث الإشعار!';
+});
 /*
 |--------------------------------------------------------------------------
 | مسارات محمية للمستخدمين المسجلين (auth:sanctum)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:sanctum')->group(function () {
+    
+
     // المستخدم الحالي
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -60,11 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/favorites/{scholarship}', [FavoriteScholarshipController::class, 'remove']);
     Route::get('/favorites', [FavoriteScholarshipController::class, 'index']);
 
-    // تفضيلات المستخدم
-    Route::get('/user/preferences', [UserPreferenceController::class, 'show']);
-    Route::post('/user/preferences', [UserPreferenceController::class, 'store']);
-    Route::put('/user/preferences', [UserPreferenceController::class, 'update']);
-    Route::delete('/user/preferences', [UserPreferenceController::class, 'destroy']);
+    
 
     // الإشعارات
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -93,9 +96,6 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
     // إدارة التخصصات
     Route::apiResource('specializations', SpecializationController::class)->except(['index', 'show']);
-
-    
-
 
     Route::post('/notifications/send-to-all', [NotificationController::class, 'sendToAll']);
 });

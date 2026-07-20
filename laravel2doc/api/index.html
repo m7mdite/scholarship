@@ -1,0 +1,1449 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Documentation - laravel/laravel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #3490dc;
+      --secondary-color: #38c172;
+      --dark-color: #2d3748;
+      --light-color: #f8fafc;
+      --get-color: #3490dc;
+      --post-color: #38c172;
+      --put-color: #f6993f;
+      --patch-color: #f6993f;
+      --delete-color: #e3342f;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    h1, h2, h3 {
+      color: var(--dark-color);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: var(--light-color);
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+.navbar {
+  background-color: #2c3e50;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.navbar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #1abc9c;
+}
+
+.github-link {
+  background-color: #b43355;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.github-link:hover {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+
+    code {
+      background: #f4f4f4;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #ddd;
+      margin: 2rem 0;
+    }
+    .method {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      display: inline-block;
+      min-width: 70px;
+      text-align: center;
+    }
+    .method-get { background-color: var(--get-color); }
+    .method-post { background-color: var(--post-color); }
+    .method-put, .method-patch { background-color: var(--put-color); }
+    .method-delete { background-color: var(--delete-color); }
+    
+    #api-content ul {
+      padding-left: 20px;
+    }
+    #api-content li {
+      margin-bottom: 5px;
+    }
+    
+    /* Interactive elements */
+    .search-container {
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 80px;
+      z-index: 99;
+      background: white;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    #search {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .endpoint-container {
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .endpoint-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: var(--light-color);
+      cursor: pointer;
+    }
+    .endpoint-header h3 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+    }
+    .endpoint-content {
+      padding: 0.75rem;
+      display: none;
+    }
+    .endpoint-content.active {
+      display: block;
+    }
+    .try-it {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .try-it:hover {
+      opacity: 0.9;
+    }
+    .try-it-form {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-group textarea {
+      height: 100px;
+    }
+    .response-container {
+      margin-top: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+    }
+    .response-header {
+      padding: 0.5rem;
+      background-color: var(--light-color);
+      display: flex;
+      justify-content: space-between;
+    }
+    .response-body {
+      padding: 0.5rem;
+      overflow-x: auto;
+    }
+    .collapse-icon {
+      margin-right: 8px;
+      transition: transform 0.3s;
+    }
+    .endpoint-header.active .collapse-icon {
+      transform: rotate(90deg);
+    }
+    #dark-mode-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--dark-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .dark-mode {
+      background-color: #1a202c;
+      color: #f7fafc;
+    }
+    .dark-mode header {
+      background-color: #2d3748;
+    }
+    .dark-mode table, .dark-mode th, .dark-mode td {
+      border-color: #4a5568;
+    }
+    .dark-mode th, .dark-mode .endpoint-header {
+      background-color: #2d3748;
+      color: #f7fafc;
+    }
+    .dark-mode tr:nth-child(even) {
+      background-color: #2d3748;
+    }
+    .dark-mode code, .dark-mode pre {
+      background-color: #2d3748;
+      color: #f7fafc;
+    }
+    
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<!-- Add Font Awesome CDN if not already included -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<div class="navbar">
+  <div class="navbar-title">
+    <i class="fas fa-code-branch"></i> Laravel2Doc
+  </div>
+  <div class="navbar-links">
+    <a href="https://laravel2doc.netlify.app/"><i class="fas fa-house"></i> Home</a>
+    <a href="../erd/"><i class="fas fa-project-diagram"></i> ERD</a>
+    <a href="../uml/"><i class="fas fa-sitemap"></i> UML</a>
+    <a href="../sequence/"><i class="fas fa-stream"></i> Sequence</a>
+    <a href="../api/"><i class="fas fa-plug"></i> API</a>
+    <a href="https://github.com/Priom7/laravel2doc" target="_blank" class="github-link">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </div>
+</div>
+
+  <header>
+    <h1>API Documentation</h1>
+    <h2>laravel/laravel (Laravel v12.58.0)</h2>
+  </header>
+  
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search endpoints, methods, or descriptions...">
+  </div>
+  
+  <main class="markdown-body">
+    <div id="api-content">
+      <h1 id="API Documentation">API Documentation</h1>
+
+<h2 id="Project: laravel/laravel">Project: laravel/laravel</h2>
+
+<p>Laravel Version: v12.58.0</p>
+
+<p>Generated: 7/14/2026, 10:04:30 PM</p>
+
+<h2 id="Table of Contents">Table of Contents</h2>
+
+<ul><li>[api](#api)</li>
+<p><li>[web](#web)</li></p>
+<p></ul></p>
+<h2 id="api">api</h2>
+
+<table>
+<p>      <thead></p>
+<p>        <tr><th>Method</th><th>Endpoint</th><th>Handler</th><th>Description</th></tr></p>
+<p>      </thead></p>
+<p>      <tbody></p>
+<p>        <tr><td>GET</td><td>/admin/stats</td><td>AdminStatsController::class, 'index'</td><td>List stats</td></tr></p>
+<p>      </tbody></p>
+<p>    </table>| GET | /hello | function () {</p>
+<p>    return response()->json(['message' => 'Hello, World!' | List hello |</p>
+<p>| POST | /register | AuthController::class, 'register' | Create a new register |</p>
+<p>| POST | /login | AuthController::class, 'login' | Create a new login |</p>
+<p>| GET | /scholarships | ScholarshipController::class, 'index' | List scholarships |</p>
+<p>| GET | /scholarships/{id} | ScholarshipController::class, 'show' | Retrieve a specific {id} |</p>
+<p>| GET | /top-scholarships | ScholarshipController::class, 'getTopScholarships' | List top-scholarships |</p>
+<p>| GET | /scholarships/{id}/similar | ScholarshipController::class, 'getSimilarScholarships' | Retrieve a specific similar |</p>
+<p>| GET | /scholarships/country/{countryId} | ScholarshipController::class, 'getByCountry' | Retrieve a specific {countryId} |</p>
+<p>| GET | /me | AuthController::class, 'me' | List me |</p>
+<p>| POST | /logout | AuthController::class, 'logout' | Create a new logout |</p>
+<p>| POST | /favorites/{scholarship} | FavoriteScholarshipController::class, 'add' | Create a new {scholarship} |</p>
+<p>| DELETE | /favorites/{scholarship} | FavoriteScholarshipController::class, 'remove' | Delete a specific {scholarship} |</p>
+<p>| GET | /favorites | FavoriteScholarshipController::class, 'index' | List favorites |</p>
+<p>| GET | /notifications | NotificationController::class, 'index' | List notifications |</p>
+<p>| GET | /notifications/unread | NotificationController::class, 'unread' | List unread |</p>
+<p>| PUT | /notifications/{id}/read | NotificationController::class, 'markAsRead' | Update a specific read |</p>
+<p>| PUT | /notifications/read-all | NotificationController::class, 'markAllAsRead' | Update a specific read-all |</p>
+<p>| DELETE | /notifications/{id} | NotificationController::class, 'destroy' | Delete a specific {id} |</p>
+<p>| POST | /scholarships | ScholarshipController::class, 'store' | Create a new scholarships |</p>
+<p>| PUT | /scholarships/{id} | ScholarshipController::class, 'update' | Update a specific {id} |</p>
+<p>| DELETE | /scholarships/{id} | ScholarshipController::class, 'destroy' | Delete a specific {id} |</p>
+<p>| POST | /notifications/send-to-all | NotificationController::class, 'sendToAll' | Create a new send-to-all |</p>
+<p>| GET | /countries | CountryController::class, 'index' | List countries |</p>
+<p>| GET | /countries/{id} | CountryController::class, 'show' | Retrieve a specific {id} |</p>
+<p>| GET | /cities | CityController::class, 'index' | List cities |</p>
+<p>| GET | /cities/{id} | CityController::class, 'show' | Retrieve a specific {id} |</p>
+<p>| GET | /categories | CategoryController::class, 'index' | List categories |</p>
+<p>| GET | /categories/{id} | CategoryController::class, 'show' | Retrieve a specific {id} |</p>
+<p>| GET | /specializations | SpecializationController::class, 'index' | List specializations |</p>
+<p>| GET | /specializations/{id} | SpecializationController::class, 'show' | Retrieve a specific {id} |</p>
+<p>| POST | /chat | ChatController::class, 'handleChat' | Create a new chat |</p>
+<p>| POST | /generate-cv | CvController::class, 'generateCV' | Create a new generate-cv |</p>
+<p>| POST | /generate-motivation-letter | CvController::class, 'generateMotivationLetter' | Create a new generate-motivation-letter |</p>
+<p>| POST | /generate-recommendation | CvController::class, 'generateRecommendationLetter' | Create a new generate-recommendation |</p>
+<p>| GET | /test-pdf | function () {</p>
+<p>    $pdf = Pdf::loadHTML('<h1>Hello</h1>');</p>
+<p>    return $pdf->download('test.pdf');</p>
+<p>});</p>
+<p>// Route::get('/top-scholarships', [ScholarshipController::class, 'getTopScholarships' | List test-pdf |</p>
+
+<p>### GET /admin/stats</p>
+
+<p><strong>Handler:</strong> AdminStatsController::class, 'index'</p>
+
+<p><strong>Description:</strong> List stats</p>
+
+<hr>
+
+<p>### GET /hello</p>
+
+<p><strong>Handler:</strong> function () {</p>
+<p>    return response()->json(['message' => 'Hello, World!'</p>
+
+<p><strong>Description:</strong> List hello</p>
+
+<hr>
+
+<p>### POST /register</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'register'</p>
+
+<p><strong>Description:</strong> Create a new register</p>
+
+<hr>
+
+<p>### POST /login</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'login'</p>
+
+<p><strong>Description:</strong> Create a new login</p>
+
+<hr>
+
+<p>### GET /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'index'</p>
+
+<p><strong>Description:</strong> List scholarships</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'show'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {id}</p>
+
+<hr>
+
+<p>### GET /top-scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'getTopScholarships'</p>
+
+<p><strong>Description:</strong> List top-scholarships</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}/similar</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'getSimilarScholarships'</p>
+
+<p><strong>Description:</strong> Retrieve a specific similar</p>
+
+<hr>
+
+<p>### GET /scholarships/country/{countryId}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'getByCountry'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {countryId}</p>
+
+<hr>
+
+<p>### GET /me</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'me'</p>
+
+<p><strong>Description:</strong> List me</p>
+
+<hr>
+
+<p>### POST /logout</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'logout'</p>
+
+<p><strong>Description:</strong> Create a new logout</p>
+
+<hr>
+
+<p>### POST /favorites/{scholarship}</p>
+
+<p><strong>Handler:</strong> FavoriteScholarshipController::class, 'add'</p>
+
+<p><strong>Description:</strong> Create a new {scholarship}</p>
+
+<hr>
+
+<p>### DELETE /favorites/{scholarship}</p>
+
+<p><strong>Handler:</strong> FavoriteScholarshipController::class, 'remove'</p>
+
+<p><strong>Description:</strong> Delete a specific {scholarship}</p>
+
+<hr>
+
+<p>### GET /favorites</p>
+
+<p><strong>Handler:</strong> FavoriteScholarshipController::class, 'index'</p>
+
+<p><strong>Description:</strong> List favorites</p>
+
+<hr>
+
+<p>### GET /notifications</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'index'</p>
+
+<p><strong>Description:</strong> List notifications</p>
+
+<hr>
+
+<p>### GET /notifications/unread</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'unread'</p>
+
+<p><strong>Description:</strong> List unread</p>
+
+<hr>
+
+<p>### PUT /notifications/{id}/read</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'markAsRead'</p>
+
+<p><strong>Description:</strong> Update a specific read</p>
+
+<hr>
+
+<p>### PUT /notifications/read-all</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'markAllAsRead'</p>
+
+<p><strong>Description:</strong> Update a specific read-all</p>
+
+<hr>
+
+<p>### DELETE /notifications/{id}</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'destroy'</p>
+
+<p><strong>Description:</strong> Delete a specific {id}</p>
+
+<hr>
+
+<p>### POST /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'store'</p>
+
+<p><strong>Description:</strong> Create a new scholarships</p>
+
+<hr>
+
+<p>### PUT /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'update'</p>
+
+<p><strong>Description:</strong> Update a specific {id}</p>
+
+<hr>
+
+<p>### DELETE /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class, 'destroy'</p>
+
+<p><strong>Description:</strong> Delete a specific {id}</p>
+
+<hr>
+
+<p>### POST /notifications/send-to-all</p>
+
+<p><strong>Handler:</strong> NotificationController::class, 'sendToAll'</p>
+
+<p><strong>Description:</strong> Create a new send-to-all</p>
+
+<hr>
+
+<p>### GET /countries</p>
+
+<p><strong>Handler:</strong> CountryController::class, 'index'</p>
+
+<p><strong>Description:</strong> List countries</p>
+
+<hr>
+
+<p>### GET /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class, 'show'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {id}</p>
+
+<hr>
+
+<p>### GET /cities</p>
+
+<p><strong>Handler:</strong> CityController::class, 'index'</p>
+
+<p><strong>Description:</strong> List cities</p>
+
+<hr>
+
+<p>### GET /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class, 'show'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {id}</p>
+
+<hr>
+
+<p>### GET /categories</p>
+
+<p><strong>Handler:</strong> CategoryController::class, 'index'</p>
+
+<p><strong>Description:</strong> List categories</p>
+
+<hr>
+
+<p>### GET /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class, 'show'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {id}</p>
+
+<hr>
+
+<p>### GET /specializations</p>
+
+<p><strong>Handler:</strong> SpecializationController::class, 'index'</p>
+
+<p><strong>Description:</strong> List specializations</p>
+
+<hr>
+
+<p>### GET /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class, 'show'</p>
+
+<p><strong>Description:</strong> Retrieve a specific {id}</p>
+
+<hr>
+
+<p>### POST /chat</p>
+
+<p><strong>Handler:</strong> ChatController::class, 'handleChat'</p>
+
+<p><strong>Description:</strong> Create a new chat</p>
+
+<hr>
+
+<p>### POST /generate-cv</p>
+
+<p><strong>Handler:</strong> CvController::class, 'generateCV'</p>
+
+<p><strong>Description:</strong> Create a new generate-cv</p>
+
+<hr>
+
+<p>### POST /generate-motivation-letter</p>
+
+<p><strong>Handler:</strong> CvController::class, 'generateMotivationLetter'</p>
+
+<p><strong>Description:</strong> Create a new generate-motivation-letter</p>
+
+<hr>
+
+<p>### POST /generate-recommendation</p>
+
+<p><strong>Handler:</strong> CvController::class, 'generateRecommendationLetter'</p>
+
+<p><strong>Description:</strong> Create a new generate-recommendation</p>
+
+<hr>
+
+<p>### GET /test-pdf</p>
+
+<p><strong>Handler:</strong> function () {</p>
+<p>    $pdf = Pdf::loadHTML('<h1>Hello</h1>');</p>
+<p>    return $pdf->download('test.pdf');</p>
+<p>});</p>
+<p>// Route::get('/top-scholarships', [ScholarshipController::class, 'getTopScholarships'</p>
+
+<p><strong>Description:</strong> List test-pdf</p>
+
+<hr>
+
+<p>### API Resource</p>
+
+<table>
+<p>      <thead></p>
+<p>        <tr><th>Method</th><th>Endpoint</th><th>Handler</th><th>Description</th></tr></p>
+<p>      </thead></p>
+<p>      <tbody></p>
+<p>        <tr><td>GET</td><td>/countries</td><td>CountryController::class@index</td><td>List all countries</td></tr><tr><td>POST</td><td>/countries</td><td>CountryController::class@store</td><td>Store a new countrie</td></tr><tr><td>GET</td><td>/countries/{id}</td><td>CountryController::class@show</td><td>Show a specific countrie</td></tr><tr><td>PUT/PATCH</td><td>/countries/{id}</td><td>CountryController::class@update</td><td>Update a specific countrie</td></tr><tr><td>DELETE</td><td>/countries/{id}</td><td>CountryController::class@destroy</td><td>Delete a specific countrie</td></tr><tr><td>GET</td><td>/cities</td><td>CityController::class@index</td><td>List all cities</td></tr><tr><td>POST</td><td>/cities</td><td>CityController::class@store</td><td>Store a new citie</td></tr><tr><td>GET</td><td>/cities/{id}</td><td>CityController::class@show</td><td>Show a specific citie</td></tr><tr><td>PUT/PATCH</td><td>/cities/{id}</td><td>CityController::class@update</td><td>Update a specific citie</td></tr><tr><td>DELETE</td><td>/cities/{id}</td><td>CityController::class@destroy</td><td>Delete a specific citie</td></tr><tr><td>GET</td><td>/categories</td><td>CategoryController::class@index</td><td>List all categories</td></tr><tr><td>POST</td><td>/categories</td><td>CategoryController::class@store</td><td>Store a new categorie</td></tr><tr><td>GET</td><td>/categories/{id}</td><td>CategoryController::class@show</td><td>Show a specific categorie</td></tr><tr><td>PUT/PATCH</td><td>/categories/{id}</td><td>CategoryController::class@update</td><td>Update a specific categorie</td></tr><tr><td>DELETE</td><td>/categories/{id}</td><td>CategoryController::class@destroy</td><td>Delete a specific categorie</td></tr><tr><td>GET</td><td>/specializations</td><td>SpecializationController::class@index</td><td>List all specializations</td></tr><tr><td>POST</td><td>/specializations</td><td>SpecializationController::class@store</td><td>Store a new specialization</td></tr><tr><td>GET</td><td>/specializations/{id}</td><td>SpecializationController::class@show</td><td>Show a specific specialization</td></tr><tr><td>PUT/PATCH</td><td>/specializations/{id}</td><td>SpecializationController::class@update</td><td>Update a specific specialization</td></tr><tr><td>DELETE</td><td>/specializations/{id}</td><td>SpecializationController::class@destroy</td><td>Delete a specific specialization</td></tr></p>
+<p>      </tbody></p>
+<p>    </table></p>
+<p>### GET /countries</p>
+
+<p><strong>Handler:</strong> CountryController::class@index</p>
+
+<p><strong>Description:</strong> List all countries</p>
+
+<hr>
+
+<p>### POST /countries</p>
+
+<p><strong>Handler:</strong> CountryController::class@store</p>
+
+<p><strong>Description:</strong> Store a new countrie</p>
+
+<hr>
+
+<p>### GET /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific countrie</p>
+
+<hr>
+
+<p>### PUT/PATCH /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific countrie</p>
+
+<hr>
+
+<p>### DELETE /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific countrie</p>
+
+<hr>
+
+<p>### GET /cities</p>
+
+<p><strong>Handler:</strong> CityController::class@index</p>
+
+<p><strong>Description:</strong> List all cities</p>
+
+<hr>
+
+<p>### POST /cities</p>
+
+<p><strong>Handler:</strong> CityController::class@store</p>
+
+<p><strong>Description:</strong> Store a new citie</p>
+
+<hr>
+
+<p>### GET /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific citie</p>
+
+<hr>
+
+<p>### PUT/PATCH /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific citie</p>
+
+<hr>
+
+<p>### DELETE /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific citie</p>
+
+<hr>
+
+<p>### GET /categories</p>
+
+<p><strong>Handler:</strong> CategoryController::class@index</p>
+
+<p><strong>Description:</strong> List all categories</p>
+
+<hr>
+
+<p>### POST /categories</p>
+
+<p><strong>Handler:</strong> CategoryController::class@store</p>
+
+<p><strong>Description:</strong> Store a new categorie</p>
+
+<hr>
+
+<p>### GET /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific categorie</p>
+
+<hr>
+
+<p>### PUT/PATCH /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific categorie</p>
+
+<hr>
+
+<p>### DELETE /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific categorie</p>
+
+<hr>
+
+<p>### GET /specializations</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@index</p>
+
+<p><strong>Description:</strong> List all specializations</p>
+
+<hr>
+
+<p>### POST /specializations</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@store</p>
+
+<p><strong>Description:</strong> Store a new specialization</p>
+
+<hr>
+
+<p>### GET /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific specialization</p>
+
+<hr>
+
+<p>### PUT/PATCH /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific specialization</p>
+
+<hr>
+
+<p>### DELETE /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific specialization</p>
+
+<hr>
+
+<h2 id="web">web</h2>
+
+<p>| Method | Endpoint | Handler | Description |</p>
+<p>|--------|----------|---------|-------------|</p>
+<p>| GET | / | function () {</p>
+<p>    return view('welcome');</p>
+<p>});</p>
+
+<p>Route::resource('scholarships', ScholarshipController::class);</p>
+<p>Route::resource('countries', CountryController::class);</p>
+<p>Route::resource('cities', CityController::class);</p>
+<p>Route::resource('categories', CategoryController::class);</p>
+<p>Route::resource('specializations', SpecializationController::class);</p>
+
+<p>// Route::resource('scholarships', ScholarshipController::class);</p>
+
+
+
+<p>Route::middleware('guest')->group(function () {</p>
+<p>    Route::get('/login', [AuthController::class, 'showLoginForm' | List resource |</p>
+<p>| POST | /login | AuthController::class, 'login' | Create a new login |</p>
+<p>| GET | /register | AuthController::class, 'showRegisterForm' | List register |</p>
+<p>| POST | /register | AuthController::class, 'register' | Create a new register |</p>
+<p>| POST | /logout | AuthController::class, 'logout' | Create a new logout |</p>
+<p>| GET | /dashboard | AuthController::class, 'dashboard' | List dashboard |</p>
+
+<p>### GET /</p>
+
+<p><strong>Handler:</strong> function () {</p>
+<p>    return view('welcome');</p>
+<p>});</p>
+
+<p>Route::resource('scholarships', ScholarshipController::class);</p>
+<p>Route::resource('countries', CountryController::class);</p>
+<p>Route::resource('cities', CityController::class);</p>
+<p>Route::resource('categories', CategoryController::class);</p>
+<p>Route::resource('specializations', SpecializationController::class);</p>
+
+<p>// Route::resource('scholarships', ScholarshipController::class);</p>
+
+
+
+<p>Route::middleware('guest')->group(function () {</p>
+<p>    Route::get('/login', [AuthController::class, 'showLoginForm'</p>
+
+<p><strong>Description:</strong> List resource</p>
+
+<hr>
+
+<p>### POST /login</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'login'</p>
+
+<p><strong>Description:</strong> Create a new login</p>
+
+<hr>
+
+<p>### GET /register</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'showRegisterForm'</p>
+
+<p><strong>Description:</strong> List register</p>
+
+<hr>
+
+<p>### POST /register</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'register'</p>
+
+<p><strong>Description:</strong> Create a new register</p>
+
+<hr>
+
+<p>### POST /logout</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'logout'</p>
+
+<p><strong>Description:</strong> Create a new logout</p>
+
+<hr>
+
+<p>### GET /dashboard</p>
+
+<p><strong>Handler:</strong> AuthController::class, 'dashboard'</p>
+
+<p><strong>Description:</strong> List dashboard</p>
+
+<hr>
+
+<p>### Resource</p>
+
+<table>
+<p>      <thead></p>
+<p>        <tr><th>Method</th><th>Endpoint</th><th>Handler</th><th>Description</th></tr></p>
+<p>      </thead></p>
+<p>      <tbody></p>
+<p>        <tr><td>GET</td><td>/scholarships</td><td>ScholarshipController::class@index</td><td>List all scholarships</td></tr><tr><td>GET</td><td>/scholarships/create</td><td>ScholarshipController::class@create</td><td>Show form to create a new scholarship</td></tr><tr><td>POST</td><td>/scholarships</td><td>ScholarshipController::class@store</td><td>Store a new scholarship</td></tr><tr><td>GET</td><td>/scholarships/{id}</td><td>ScholarshipController::class@show</td><td>Show a specific scholarship</td></tr><tr><td>GET</td><td>/scholarships/{id}/edit</td><td>ScholarshipController::class@edit</td><td>Show form to edit scholarship</td></tr><tr><td>PUT/PATCH</td><td>/scholarships/{id}</td><td>ScholarshipController::class@update</td><td>Update a specific scholarship</td></tr><tr><td>DELETE</td><td>/scholarships/{id}</td><td>ScholarshipController::class@destroy</td><td>Delete a specific scholarship</td></tr><tr><td>GET</td><td>/countries</td><td>CountryController::class@index</td><td>List all countries</td></tr><tr><td>GET</td><td>/countries/create</td><td>CountryController::class@create</td><td>Show form to create a new countrie</td></tr><tr><td>POST</td><td>/countries</td><td>CountryController::class@store</td><td>Store a new countrie</td></tr><tr><td>GET</td><td>/countries/{id}</td><td>CountryController::class@show</td><td>Show a specific countrie</td></tr><tr><td>GET</td><td>/countries/{id}/edit</td><td>CountryController::class@edit</td><td>Show form to edit countrie</td></tr><tr><td>PUT/PATCH</td><td>/countries/{id}</td><td>CountryController::class@update</td><td>Update a specific countrie</td></tr><tr><td>DELETE</td><td>/countries/{id}</td><td>CountryController::class@destroy</td><td>Delete a specific countrie</td></tr><tr><td>GET</td><td>/cities</td><td>CityController::class@index</td><td>List all cities</td></tr><tr><td>GET</td><td>/cities/create</td><td>CityController::class@create</td><td>Show form to create a new citie</td></tr><tr><td>POST</td><td>/cities</td><td>CityController::class@store</td><td>Store a new citie</td></tr><tr><td>GET</td><td>/cities/{id}</td><td>CityController::class@show</td><td>Show a specific citie</td></tr><tr><td>GET</td><td>/cities/{id}/edit</td><td>CityController::class@edit</td><td>Show form to edit citie</td></tr><tr><td>PUT/PATCH</td><td>/cities/{id}</td><td>CityController::class@update</td><td>Update a specific citie</td></tr><tr><td>DELETE</td><td>/cities/{id}</td><td>CityController::class@destroy</td><td>Delete a specific citie</td></tr><tr><td>GET</td><td>/categories</td><td>CategoryController::class@index</td><td>List all categories</td></tr><tr><td>GET</td><td>/categories/create</td><td>CategoryController::class@create</td><td>Show form to create a new categorie</td></tr><tr><td>POST</td><td>/categories</td><td>CategoryController::class@store</td><td>Store a new categorie</td></tr><tr><td>GET</td><td>/categories/{id}</td><td>CategoryController::class@show</td><td>Show a specific categorie</td></tr><tr><td>GET</td><td>/categories/{id}/edit</td><td>CategoryController::class@edit</td><td>Show form to edit categorie</td></tr><tr><td>PUT/PATCH</td><td>/categories/{id}</td><td>CategoryController::class@update</td><td>Update a specific categorie</td></tr><tr><td>DELETE</td><td>/categories/{id}</td><td>CategoryController::class@destroy</td><td>Delete a specific categorie</td></tr><tr><td>GET</td><td>/specializations</td><td>SpecializationController::class@index</td><td>List all specializations</td></tr><tr><td>GET</td><td>/specializations/create</td><td>SpecializationController::class@create</td><td>Show form to create a new specialization</td></tr><tr><td>POST</td><td>/specializations</td><td>SpecializationController::class@store</td><td>Store a new specialization</td></tr><tr><td>GET</td><td>/specializations/{id}</td><td>SpecializationController::class@show</td><td>Show a specific specialization</td></tr><tr><td>GET</td><td>/specializations/{id}/edit</td><td>SpecializationController::class@edit</td><td>Show form to edit specialization</td></tr><tr><td>PUT/PATCH</td><td>/specializations/{id}</td><td>SpecializationController::class@update</td><td>Update a specific specialization</td></tr><tr><td>DELETE</td><td>/specializations/{id}</td><td>SpecializationController::class@destroy</td><td>Delete a specific specialization</td></tr><tr><td>GET</td><td>/scholarships</td><td>ScholarshipController::class@index</td><td>List all scholarships</td></tr><tr><td>GET</td><td>/scholarships/create</td><td>ScholarshipController::class@create</td><td>Show form to create a new scholarship</td></tr><tr><td>POST</td><td>/scholarships</td><td>ScholarshipController::class@store</td><td>Store a new scholarship</td></tr><tr><td>GET</td><td>/scholarships/{id}</td><td>ScholarshipController::class@show</td><td>Show a specific scholarship</td></tr><tr><td>GET</td><td>/scholarships/{id}/edit</td><td>ScholarshipController::class@edit</td><td>Show form to edit scholarship</td></tr><tr><td>PUT/PATCH</td><td>/scholarships/{id}</td><td>ScholarshipController::class@update</td><td>Update a specific scholarship</td></tr><tr><td>DELETE</td><td>/scholarships/{id}</td><td>ScholarshipController::class@destroy</td><td>Delete a specific scholarship</td></tr></p>
+<p>      </tbody></p>
+<p>    </table></p>
+<p>### GET /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@index</p>
+
+<p><strong>Description:</strong> List all scholarships</p>
+
+<hr>
+
+<p>### GET /scholarships/create</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new scholarship</p>
+
+<hr>
+
+<p>### POST /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@store</p>
+
+<p><strong>Description:</strong> Store a new scholarship</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific scholarship</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}/edit</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit scholarship</p>
+
+<hr>
+
+<p>### PUT/PATCH /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific scholarship</p>
+
+<hr>
+
+<p>### DELETE /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific scholarship</p>
+
+<hr>
+
+<p>### GET /countries</p>
+
+<p><strong>Handler:</strong> CountryController::class@index</p>
+
+<p><strong>Description:</strong> List all countries</p>
+
+<hr>
+
+<p>### GET /countries/create</p>
+
+<p><strong>Handler:</strong> CountryController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new countrie</p>
+
+<hr>
+
+<p>### POST /countries</p>
+
+<p><strong>Handler:</strong> CountryController::class@store</p>
+
+<p><strong>Description:</strong> Store a new countrie</p>
+
+<hr>
+
+<p>### GET /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific countrie</p>
+
+<hr>
+
+<p>### GET /countries/{id}/edit</p>
+
+<p><strong>Handler:</strong> CountryController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit countrie</p>
+
+<hr>
+
+<p>### PUT/PATCH /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific countrie</p>
+
+<hr>
+
+<p>### DELETE /countries/{id}</p>
+
+<p><strong>Handler:</strong> CountryController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific countrie</p>
+
+<hr>
+
+<p>### GET /cities</p>
+
+<p><strong>Handler:</strong> CityController::class@index</p>
+
+<p><strong>Description:</strong> List all cities</p>
+
+<hr>
+
+<p>### GET /cities/create</p>
+
+<p><strong>Handler:</strong> CityController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new citie</p>
+
+<hr>
+
+<p>### POST /cities</p>
+
+<p><strong>Handler:</strong> CityController::class@store</p>
+
+<p><strong>Description:</strong> Store a new citie</p>
+
+<hr>
+
+<p>### GET /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific citie</p>
+
+<hr>
+
+<p>### GET /cities/{id}/edit</p>
+
+<p><strong>Handler:</strong> CityController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit citie</p>
+
+<hr>
+
+<p>### PUT/PATCH /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific citie</p>
+
+<hr>
+
+<p>### DELETE /cities/{id}</p>
+
+<p><strong>Handler:</strong> CityController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific citie</p>
+
+<hr>
+
+<p>### GET /categories</p>
+
+<p><strong>Handler:</strong> CategoryController::class@index</p>
+
+<p><strong>Description:</strong> List all categories</p>
+
+<hr>
+
+<p>### GET /categories/create</p>
+
+<p><strong>Handler:</strong> CategoryController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new categorie</p>
+
+<hr>
+
+<p>### POST /categories</p>
+
+<p><strong>Handler:</strong> CategoryController::class@store</p>
+
+<p><strong>Description:</strong> Store a new categorie</p>
+
+<hr>
+
+<p>### GET /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific categorie</p>
+
+<hr>
+
+<p>### GET /categories/{id}/edit</p>
+
+<p><strong>Handler:</strong> CategoryController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit categorie</p>
+
+<hr>
+
+<p>### PUT/PATCH /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific categorie</p>
+
+<hr>
+
+<p>### DELETE /categories/{id}</p>
+
+<p><strong>Handler:</strong> CategoryController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific categorie</p>
+
+<hr>
+
+<p>### GET /specializations</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@index</p>
+
+<p><strong>Description:</strong> List all specializations</p>
+
+<hr>
+
+<p>### GET /specializations/create</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new specialization</p>
+
+<hr>
+
+<p>### POST /specializations</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@store</p>
+
+<p><strong>Description:</strong> Store a new specialization</p>
+
+<hr>
+
+<p>### GET /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific specialization</p>
+
+<hr>
+
+<p>### GET /specializations/{id}/edit</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit specialization</p>
+
+<hr>
+
+<p>### PUT/PATCH /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific specialization</p>
+
+<hr>
+
+<p>### DELETE /specializations/{id}</p>
+
+<p><strong>Handler:</strong> SpecializationController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific specialization</p>
+
+<hr>
+
+<p>### GET /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@index</p>
+
+<p><strong>Description:</strong> List all scholarships</p>
+
+<hr>
+
+<p>### GET /scholarships/create</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@create</p>
+
+<p><strong>Description:</strong> Show form to create a new scholarship</p>
+
+<hr>
+
+<p>### POST /scholarships</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@store</p>
+
+<p><strong>Description:</strong> Store a new scholarship</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@show</p>
+
+<p><strong>Description:</strong> Show a specific scholarship</p>
+
+<hr>
+
+<p>### GET /scholarships/{id}/edit</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@edit</p>
+
+<p><strong>Description:</strong> Show form to edit scholarship</p>
+
+<hr>
+
+<p>### PUT/PATCH /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@update</p>
+
+<p><strong>Description:</strong> Update a specific scholarship</p>
+
+<hr>
+
+<p>### DELETE /scholarships/{id}</p>
+
+<p><strong>Handler:</strong> ScholarshipController::class@destroy</p>
+
+<p><strong>Description:</strong> Delete a specific scholarship</p>
+
+<hr>
+
+
+    </div>
+  </main>
+  
+  <button id="dark-mode-toggle">🌓</button>
+
+  <script>
+    hljs.highlightAll();
+    
+    // Add method color classes
+    document.querySelectorAll('table td:first-child').forEach(cell => {
+      const method = cell.textContent.trim().toLowerCase();
+      const methods = method.split('/');
+      
+      if (methods.length) {
+        const mainMethod = methods[0].toLowerCase();
+        if (['get', 'post', 'put', 'patch', 'delete'].includes(mainMethod)) {
+          cell.innerHTML = `<span class="method method-${mainMethod}">${cell.textContent}</span>`;
+        }
+      }
+    });
+    
+    // Interactive search
+    const search = document.getElementById('search');
+    search.addEventListener('input', function() {
+      const value = this.value.toLowerCase();
+      const endpoints = document.querySelectorAll('.endpoint-container');
+      
+      endpoints.forEach(endpoint => {
+        const text = endpoint.textContent.toLowerCase();
+        const match = text.includes(value);
+        endpoint.style.display = match ? 'block' : 'none';
+      });
+    });
+    
+    // Toggle endpoint details
+    document.querySelectorAll('.endpoint-header').forEach(header => {
+      header.addEventListener('click', function() {
+        this.classList.toggle('active');
+        const content = this.nextElementSibling;
+        content.classList.toggle('active');
+      });
+    });
+    
+    // Try It functionality
+    document.querySelectorAll('.try-it').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const container = this.closest('.endpoint-container');
+        const content = container.querySelector('.endpoint-content');
+        
+        if (!content.classList.contains('active')) {
+          container.querySelector('.endpoint-header').click();
+        }
+        
+        // Create form if it doesn't exist
+        if (!container.querySelector('.try-it-form')) {
+          const method = container.getAttribute('data-method');
+          const endpoint = container.getAttribute('data-endpoint');
+          
+          const form = document.createElement('div');
+          form.className = 'try-it-form';
+          form.innerHTML = `
+            <h4>Test Request</h4>
+            <div class="form-group">
+              <label>URL</label>
+              <input type="text" class="url-input" value="${window.location.origin}${endpoint}" readonly>
+            </div>
+            ${method !== 'GET' ? `
+              <div class="form-group">
+                <label>Request Body (JSON)</label>
+                <textarea class="body-input">{}</textarea>
+              </div>
+            ` : ''}
+            <div class="form-group">
+              <button type="button" class="send-request">Send Request</button>
+            </div>
+            <div class="response-container">
+              <div class="response-header">
+                <span class="response-status"></span>
+                <span class="response-time"></span>
+              </div>
+              <div class="response-body">
+                <pre><code class="language-json response-code"></code></pre>
+              </div>
+            </div>
+          `;
+          
+          content.appendChild(form);
+          
+          // Add event listener to send button
+          form.querySelector('.send-request').addEventListener('click', async function() {
+            const urlInput = form.querySelector('.url-input');
+            const bodyInput = form.querySelector('.body-input');
+            const responseContainer = form.querySelector('.response-container');
+            const responseStatus = form.querySelector('.response-status');
+            const responseTime = form.querySelector('.response-time');
+            const responseCode = form.querySelector('.response-code');
+            
+            const url = urlInput.value;
+            const body = bodyInput ? bodyInput.value : null;
+            
+            const startTime = Date.now();
+            
+            try {
+              responseContainer.style.display = 'block';
+              responseStatus.textContent = 'Loading...';
+              responseTime.textContent = '';
+              responseCode.textContent = '';
+              
+              // Note: In a real implementation, you would make actual API calls
+              // For demo purposes, we're just simulating a response
+              const response = {
+                status: 200,
+                statusText: 'OK',
+                data: { 
+                  message: "This is a simulated response for demonstration.",
+                  method: method,
+                  url: url,
+                  receivedBody: body ? JSON.parse(body) : null
+                }
+              };
+              
+              const endTime = Date.now();
+              const time = endTime - startTime;
+              
+              setTimeout(() => {
+                responseStatus.textContent = `Status: ${response.status} ${response.statusText}`;
+                responseTime.textContent = `Time: ${time}ms`;
+                responseCode.textContent = JSON.stringify(response.data, null, 2);
+                hljs.highlightElement(responseCode);
+              }, 500); // Simulate network delay
+              
+            } catch (error) {
+              responseStatus.textContent = 'Error';
+              responseCode.textContent = error.toString();
+              hljs.highlightElement(responseCode);
+            }
+          });
+        }
+      });
+    });
+    
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    darkModeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    });
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
+</body>
+</html>
+  

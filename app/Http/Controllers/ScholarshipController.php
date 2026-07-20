@@ -40,35 +40,27 @@ class ScholarshipController extends Controller
     }
 
 
+
     // =====================================================================================================
     //    جلب المنح المميزة  مع دعم الفلاتر والاقتراحات الشخصية
     // =====================================================================================================
     public function getTopScholarships(Request $request)
     {
-
         /** @var \App\Models\User|null $user */
         $user = auth('sanctum')->user();
         $today = Carbon::today();
-
-        // إعدادات pagination من الطلب
-        $perPage = (int) $request->input('per_page', 15);  // عدد النتائج في الصفحة (افتراضي 15)
+        $perPage = (int) $request->input('per_page', 15);
         $page = (int) $request->input('page', 1);
-
-        // قراءة الفلاتر من الطلب
         $filters = [
             'country_id' => $request->input('country'),
             'category_id' => $request->input('category'),
             'degree' => $request->input('degree'),
             'finance' => $request->input('finance'),
         ];
-        // إزالة الفلاتر الفارغة
         $filters = array_filter($filters, fn($v) => !is_null($v) && $v !== '' && $v !== 0);
-
-        // إذا كان المستخدم مسجلاً ولديه مفضلات ولم يتم إرسال أي فلتر -> نستخدم المنح المقترحة
         $usePersonalized = ($user && $user->favoriteScholarships()->count() > 0 && empty($filters));
 
         if ($usePersonalized) {
-            // نفس المنطق القديم: اقتراحات بناءً على مفضلات المستخدم
             $favorites = $user->favoriteScholarships;
             $specializationIds = $favorites->pluck('specialization_id')->unique()->toArray();
             $countryIds = $favorites->pluck('country_id')->unique()->toArray();
@@ -95,12 +87,9 @@ class ScholarshipController extends Controller
             ");
             $message = 'تم جلب منح مقترحة بناءً على مفضلاتك';
         } else {
-            // المنح العادية (مع أو بدون فلاتر)
             $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
                 ->where('finished_date', '>=', $today)
                 ->orderBy('id', 'desc');
-
-            // تطبيق الفلاتر إذا وجدت
             if (!empty($filters)) {
                 foreach ($filters as $column => $value) {
                     if ($column === 'degree' || $column === 'finance') {
@@ -116,13 +105,8 @@ class ScholarshipController extends Controller
                 $message = 'تم جلب أحدث المنح';
             }
         }
-
-        // تنفيذ paginate
         $scholarships = $query->paginate($perPage, ['*'], 'page', $page);
-
-        // تنسيق البيانات كما في السابق (map)
         $formatted = $scholarships->getCollection()->map(function ($scholarship) use ($today) {
-            // حساب start_status (نفس الكود القديم)
             $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
             if ($startDate && $startDate->isFuture()) {
                 $startStatus = 'تبدأ في ' . $startDate->toDateString();
@@ -146,8 +130,6 @@ class ScholarshipController extends Controller
                 'photo_url' => $photoUrl,
             ];
         });
-
-        // إعادة بناء paginator بالبيانات المنسقة
         $paginatedData = new LengthAwarePaginator(
             $formatted,
             $scholarships->total(),
@@ -542,7 +524,7 @@ class ScholarshipController extends Controller
 
 
 
-    
+
     // ==========================================================================================
     // ارسال إشعارات للمستخدمين الذين لديهم تفضيلات مطابقة للمنحة
     // =========================================================================================

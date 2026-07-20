@@ -29,7 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 401);
             }
         });
-    })->withMiddleware(function (Middleware $middleware) {
+    })->withBroadcasting(
+        __DIR__.'/../routes/channels.php', // هذا الملف سيحتوي على قنوات المصادقة
+        ['prefix' => 'api', 'middleware' => ['auth:sanctum']] // اختياري
+    )->withMiddleware(function (Middleware $middleware) {
         $middleware->append(\App\Http\Middleware\ExecutionTimeMiddleware::class);
         $middleware->append(\App\Http\Middleware\VisitorTracker::class);
     })->create();

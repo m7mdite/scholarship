@@ -1,0 +1,650 @@
+{
+  "projectName": "laravel/laravel",
+  "projectVersion": "v12.58.0",
+  "generatedAt": "2026-07-15T05:04:30.637Z",
+  "diagrams": [
+    {
+      "id": "AdminStatsController-index",
+      "name": "AdminStatsController::index",
+      "controller": "AdminStats",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from AdminStatsController",
+      "fileName": "AdminStatsController_index.md",
+      "models": [
+        "Category",
+        "Country",
+        "Scholarship",
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.537Z"
+    },
+    {
+      "id": "AuthController-register",
+      "name": "AuthController::register",
+      "controller": "Auth",
+      "method": "register",
+      "type": "generic",
+      "description": "Handles register operation in AuthController",
+      "fileName": "AuthController_register.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.538Z"
+    },
+    {
+      "id": "AuthController-login",
+      "name": "AuthController::login",
+      "controller": "Auth",
+      "method": "login",
+      "type": "generic",
+      "description": "Handles login operation in AuthController",
+      "fileName": "AuthController_login.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.539Z"
+    },
+    {
+      "id": "AuthController-logout",
+      "name": "AuthController::logout",
+      "controller": "Auth",
+      "method": "logout",
+      "type": "generic",
+      "description": "Handles logout operation in AuthController",
+      "fileName": "AuthController_logout.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.541Z"
+    },
+    {
+      "id": "AuthController-me",
+      "name": "AuthController::me",
+      "controller": "Auth",
+      "method": "me",
+      "type": "generic",
+      "description": "Handles me operation in AuthController",
+      "fileName": "AuthController_me.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.542Z"
+    },
+    {
+      "id": "CategoryController-index",
+      "name": "CategoryController::index",
+      "controller": "Category",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from CategoryController",
+      "fileName": "CategoryController_index.md",
+      "models": [
+        "Category"
+      ],
+      "timestamp": "2026-07-15T05:04:30.543Z"
+    },
+    {
+      "id": "CategoryController-store",
+      "name": "CategoryController::store",
+      "controller": "Category",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in CategoryController",
+      "fileName": "CategoryController_store.md",
+      "models": [
+        "Category"
+      ],
+      "timestamp": "2026-07-15T05:04:30.545Z"
+    },
+    {
+      "id": "CategoryController-show",
+      "name": "CategoryController::show",
+      "controller": "Category",
+      "method": "show",
+      "type": "show",
+      "description": "Retrieves a specific resource from CategoryController",
+      "fileName": "CategoryController_show.md",
+      "models": [
+        "Category"
+      ],
+      "timestamp": "2026-07-15T05:04:30.547Z"
+    },
+    {
+      "id": "CategoryController-update",
+      "name": "CategoryController::update",
+      "controller": "Category",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in CategoryController",
+      "fileName": "CategoryController_update.md",
+      "models": [
+        "Category"
+      ],
+      "timestamp": "2026-07-15T05:04:30.547Z"
+    },
+    {
+      "id": "CategoryController-destroy",
+      "name": "CategoryController::destroy",
+      "controller": "Category",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from CategoryController",
+      "fileName": "CategoryController_destroy.md",
+      "models": [
+        "Category"
+      ],
+      "timestamp": "2026-07-15T05:04:30.548Z"
+    },
+    {
+      "id": "ChatController-handleChat",
+      "name": "ChatController::handleChat",
+      "controller": "Chat",
+      "method": "handleChat",
+      "type": "generic",
+      "description": "Handles handleChat operation in ChatController",
+      "fileName": "ChatController_handleChat.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.549Z"
+    },
+    {
+      "id": "CityController-index",
+      "name": "CityController::index",
+      "controller": "City",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from CityController",
+      "fileName": "CityController_index.md",
+      "models": [
+        "City"
+      ],
+      "timestamp": "2026-07-15T05:04:30.550Z"
+    },
+    {
+      "id": "CityController-store",
+      "name": "CityController::store",
+      "controller": "City",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in CityController",
+      "fileName": "CityController_store.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.551Z"
+    },
+    {
+      "id": "CityController-show",
+      "name": "CityController::show",
+      "controller": "City",
+      "method": "show",
+      "type": "show",
+      "description": "Retrieves a specific resource from CityController",
+      "fileName": "CityController_show.md",
+      "models": [
+        "City"
+      ],
+      "timestamp": "2026-07-15T05:04:30.552Z"
+    },
+    {
+      "id": "CityController-update",
+      "name": "CityController::update",
+      "controller": "City",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in CityController",
+      "fileName": "CityController_update.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.552Z"
+    },
+    {
+      "id": "CityController-destroy",
+      "name": "CityController::destroy",
+      "controller": "City",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from CityController",
+      "fileName": "CityController_destroy.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.553Z"
+    },
+    {
+      "id": "CountryController-index",
+      "name": "CountryController::index",
+      "controller": "Country",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from CountryController",
+      "fileName": "CountryController_index.md",
+      "models": [
+        "Country"
+      ],
+      "timestamp": "2026-07-15T05:04:30.554Z"
+    },
+    {
+      "id": "CountryController-store",
+      "name": "CountryController::store",
+      "controller": "Country",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in CountryController",
+      "fileName": "CountryController_store.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.554Z"
+    },
+    {
+      "id": "CountryController-show",
+      "name": "CountryController::show",
+      "controller": "Country",
+      "method": "show",
+      "type": "show",
+      "description": "Retrieves a specific resource from CountryController",
+      "fileName": "CountryController_show.md",
+      "models": [
+        "Country"
+      ],
+      "timestamp": "2026-07-15T05:04:30.555Z"
+    },
+    {
+      "id": "CountryController-update",
+      "name": "CountryController::update",
+      "controller": "Country",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in CountryController",
+      "fileName": "CountryController_update.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.556Z"
+    },
+    {
+      "id": "CountryController-destroy",
+      "name": "CountryController::destroy",
+      "controller": "Country",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from CountryController",
+      "fileName": "CountryController_destroy.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.556Z"
+    },
+    {
+      "id": "CvController-generateCV",
+      "name": "CvController::generateCV",
+      "controller": "Cv",
+      "method": "generateCV",
+      "type": "generic",
+      "description": "Handles generateCV operation in CvController",
+      "fileName": "CvController_generateCV.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.557Z"
+    },
+    {
+      "id": "CvController-generateMotivationLetter",
+      "name": "CvController::generateMotivationLetter",
+      "controller": "Cv",
+      "method": "generateMotivationLetter",
+      "type": "generic",
+      "description": "Handles generateMotivationLetter operation in CvController",
+      "fileName": "CvController_generateMotivationLetter.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.558Z"
+    },
+    {
+      "id": "CvController-generateRecommendationLetter",
+      "name": "CvController::generateRecommendationLetter",
+      "controller": "Cv",
+      "method": "generateRecommendationLetter",
+      "type": "generic",
+      "description": "Handles generateRecommendationLetter operation in CvController",
+      "fileName": "CvController_generateRecommendationLetter.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.559Z"
+    },
+    {
+      "id": "FavoriteScholarshipController-add",
+      "name": "FavoriteScholarshipController::add",
+      "controller": "FavoriteScholarship",
+      "method": "add",
+      "type": "create",
+      "description": "Creates a new resource in FavoriteScholarshipController",
+      "fileName": "FavoriteScholarshipController_add.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.559Z"
+    },
+    {
+      "id": "FavoriteScholarshipController-remove",
+      "name": "FavoriteScholarshipController::remove",
+      "controller": "FavoriteScholarship",
+      "method": "remove",
+      "type": "delete",
+      "description": "Removes a resource from FavoriteScholarshipController",
+      "fileName": "FavoriteScholarshipController_remove.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.560Z"
+    },
+    {
+      "id": "FavoriteScholarshipController-index",
+      "name": "FavoriteScholarshipController::index",
+      "controller": "FavoriteScholarship",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from FavoriteScholarshipController",
+      "fileName": "FavoriteScholarshipController_index.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.561Z"
+    },
+    {
+      "id": "NotificationController-index",
+      "name": "NotificationController::index",
+      "controller": "Notification",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from NotificationController",
+      "fileName": "NotificationController_index.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.561Z"
+    },
+    {
+      "id": "NotificationController-unread",
+      "name": "NotificationController::unread",
+      "controller": "Notification",
+      "method": "unread",
+      "type": "generic",
+      "description": "Handles unread operation in NotificationController",
+      "fileName": "NotificationController_unread.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.562Z"
+    },
+    {
+      "id": "NotificationController-markAsRead",
+      "name": "NotificationController::markAsRead",
+      "controller": "Notification",
+      "method": "markAsRead",
+      "type": "generic",
+      "description": "Handles markAsRead operation in NotificationController",
+      "fileName": "NotificationController_markAsRead.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.563Z"
+    },
+    {
+      "id": "NotificationController-markAllAsRead",
+      "name": "NotificationController::markAllAsRead",
+      "controller": "Notification",
+      "method": "markAllAsRead",
+      "type": "generic",
+      "description": "Handles markAllAsRead operation in NotificationController",
+      "fileName": "NotificationController_markAllAsRead.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.563Z"
+    },
+    {
+      "id": "NotificationController-destroy",
+      "name": "NotificationController::destroy",
+      "controller": "Notification",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from NotificationController",
+      "fileName": "NotificationController_destroy.md",
+      "models": [
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.564Z"
+    },
+    {
+      "id": "NotificationController-sendToAll",
+      "name": "NotificationController::sendToAll",
+      "controller": "Notification",
+      "method": "sendToAll",
+      "type": "generic",
+      "description": "Handles sendToAll operation in NotificationController",
+      "fileName": "NotificationController_sendToAll.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.564Z"
+    },
+    {
+      "id": "ReviewController-index",
+      "name": "ReviewController::index",
+      "controller": "Review",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from ReviewController",
+      "fileName": "ReviewController_index.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.565Z"
+    },
+    {
+      "id": "ReviewController-store",
+      "name": "ReviewController::store",
+      "controller": "Review",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in ReviewController",
+      "fileName": "ReviewController_store.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.565Z"
+    },
+    {
+      "id": "ReviewController-update",
+      "name": "ReviewController::update",
+      "controller": "Review",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in ReviewController",
+      "fileName": "ReviewController_update.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.566Z"
+    },
+    {
+      "id": "ReviewController-destroy",
+      "name": "ReviewController::destroy",
+      "controller": "Review",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from ReviewController",
+      "fileName": "ReviewController_destroy.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.566Z"
+    },
+    {
+      "id": "ScholarshipController-index",
+      "name": "ScholarshipController::index",
+      "controller": "Scholarship",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from ScholarshipController",
+      "fileName": "ScholarshipController_index.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.567Z"
+    },
+    {
+      "id": "ScholarshipController-getTopScholarships",
+      "name": "ScholarshipController::getTopScholarships",
+      "controller": "Scholarship",
+      "method": "getTopScholarships",
+      "type": "generic",
+      "description": "Handles getTopScholarships operation in ScholarshipController",
+      "fileName": "ScholarshipController_getTopScholarships.md",
+      "models": [
+        "Scholarship",
+        "User"
+      ],
+      "timestamp": "2026-07-15T05:04:30.568Z"
+    },
+    {
+      "id": "ScholarshipController-getByCountry",
+      "name": "ScholarshipController::getByCountry",
+      "controller": "Scholarship",
+      "method": "getByCountry",
+      "type": "generic",
+      "description": "Handles getByCountry operation in ScholarshipController",
+      "fileName": "ScholarshipController_getByCountry.md",
+      "models": [
+        "Country"
+      ],
+      "timestamp": "2026-07-15T05:04:30.569Z"
+    },
+    {
+      "id": "ScholarshipController-store",
+      "name": "ScholarshipController::store",
+      "controller": "Scholarship",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in ScholarshipController",
+      "fileName": "ScholarshipController_store.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.569Z"
+    },
+    {
+      "id": "ScholarshipController-show",
+      "name": "ScholarshipController::show",
+      "controller": "Scholarship",
+      "method": "show",
+      "type": "show",
+      "description": "Retrieves a specific resource from ScholarshipController",
+      "fileName": "ScholarshipController_show.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.570Z"
+    },
+    {
+      "id": "ScholarshipController-update",
+      "name": "ScholarshipController::update",
+      "controller": "Scholarship",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in ScholarshipController",
+      "fileName": "ScholarshipController_update.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.571Z"
+    },
+    {
+      "id": "ScholarshipController-destroy",
+      "name": "ScholarshipController::destroy",
+      "controller": "Scholarship",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from ScholarshipController",
+      "fileName": "ScholarshipController_destroy.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.571Z"
+    },
+    {
+      "id": "ScholarshipController-getSimilarScholarships",
+      "name": "ScholarshipController::getSimilarScholarships",
+      "controller": "Scholarship",
+      "method": "getSimilarScholarships",
+      "type": "generic",
+      "description": "Handles getSimilarScholarships operation in ScholarshipController",
+      "fileName": "ScholarshipController_getSimilarScholarships.md",
+      "models": [
+        "Scholarship"
+      ],
+      "timestamp": "2026-07-15T05:04:30.572Z"
+    },
+    {
+      "id": "SpecializationController-index",
+      "name": "SpecializationController::index",
+      "controller": "Specialization",
+      "method": "index",
+      "type": "list",
+      "description": "Retrieves a collection of resources from SpecializationController",
+      "fileName": "SpecializationController_index.md",
+      "models": [
+        "Specialization"
+      ],
+      "timestamp": "2026-07-15T05:04:30.573Z"
+    },
+    {
+      "id": "SpecializationController-store",
+      "name": "SpecializationController::store",
+      "controller": "Specialization",
+      "method": "store",
+      "type": "create",
+      "description": "Creates a new resource in SpecializationController",
+      "fileName": "SpecializationController_store.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.574Z"
+    },
+    {
+      "id": "SpecializationController-show",
+      "name": "SpecializationController::show",
+      "controller": "Specialization",
+      "method": "show",
+      "type": "show",
+      "description": "Retrieves a specific resource from SpecializationController",
+      "fileName": "SpecializationController_show.md",
+      "models": [
+        "Specialization"
+      ],
+      "timestamp": "2026-07-15T05:04:30.574Z"
+    },
+    {
+      "id": "SpecializationController-update",
+      "name": "SpecializationController::update",
+      "controller": "Specialization",
+      "method": "update",
+      "type": "update",
+      "description": "Updates an existing resource in SpecializationController",
+      "fileName": "SpecializationController_update.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.575Z"
+    },
+    {
+      "id": "SpecializationController-destroy",
+      "name": "SpecializationController::destroy",
+      "controller": "Specialization",
+      "method": "destroy",
+      "type": "delete",
+      "description": "Removes a resource from SpecializationController",
+      "fileName": "SpecializationController_destroy.md",
+      "models": [],
+      "timestamp": "2026-07-15T05:04:30.575Z"
+    }
+  ],
+  "statistics": {
+    "totalDiagrams": 50,
+    "byType": {
+      "list": 9,
+      "generic": 15,
+      "create": 7,
+      "show": 5,
+      "update": 6,
+      "delete": 8
+    },
+    "byController": {
+      "AdminStats": 1,
+      "ApplicationCriteria": 0,
+      "Auth": 4,
+      "Category": 5,
+      "Chat": 1,
+      "City": 5,
+      "": 0,
+      "Country": 5,
+      "Cv": 3,
+      "FavoriteScholarship": 3,
+      "HowToApply": 0,
+      "HuggingFace": 0,
+      "Notification": 6,
+      "PersonalExperience": 0,
+      "Photo": 0,
+      "Review": 4,
+      "Scholarship": 8,
+      "Specialization": 5
+    }
+  }
+}

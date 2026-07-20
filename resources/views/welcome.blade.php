@@ -43,9 +43,13 @@
             height: 24px;
         }
     </style>
+    @viteReactRefresh
+    @vite('resources/js/app.js')
 </head>
 
 <body class="bg-gray-50">
+
+    <div id="root"></div>
 
     <!-- الهيدر (شريط التنقل) -->
     <nav class="bg-white shadow-md sticky top-0 z-50">

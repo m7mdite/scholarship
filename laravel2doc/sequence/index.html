@@ -1,0 +1,3722 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequence Diagrams - laravel/laravel</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<!-- Add Font Awesome CDN if not already included -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<div class="navbar">
+  <div class="navbar-title">
+    <i class="fas fa-code-branch"></i> Laravel2Doc
+  </div>
+  <div class="navbar-links">
+    <a href="https://laravel2doc.netlify.app/"><i class="fas fa-house"></i> Home</a>
+    <a href="../erd/"><i class="fas fa-project-diagram"></i> ERD</a>
+    <a href="../uml/"><i class="fas fa-sitemap"></i> UML</a>
+    <a href="../sequence/"><i class="fas fa-stream"></i> Sequence</a>
+    <a href="../api/"><i class="fas fa-plug"></i> API</a>
+    <a href="https://github.com/Priom7/laravel2doc" target="_blank" class="github-link">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </div>
+</div>
+
+  <header>
+    <h1>Sequence Diagrams</h1>
+    <h2>laravel/laravel (Laravel v12.58.0)</h2>
+  </header>
+  
+  <nav>
+    <div class="controls">
+      <input type="text" id="search-diagrams" class="search-box" placeholder="Search diagrams...">
+      <select id="filter-type" class="select-box">
+        <option value="all">All Types</option>
+        <option value="list">List</option>
+        <option value="show">Show</option>
+        <option value="create">Create</option>
+        <option value="update">Update</option>
+        <option value="delete">Delete</option>
+        <option value="generic">Generic</option>
+      </select>
+      <select id="filter-controller" class="select-box">
+        <option value="all">All Controllers</option>
+        <option value="AdminStats">AdminStats</option>
+        <option value="ApplicationCriteria">ApplicationCriteria</option>
+        <option value="Auth">Auth</option>
+        <option value="Category">Category</option>
+        <option value="Chat">Chat</option>
+        <option value="City">City</option>
+        <option value=""></option>
+        <option value="Country">Country</option>
+        <option value="Cv">Cv</option>
+        <option value="FavoriteScholarship">FavoriteScholarship</option>
+        <option value="HowToApply">HowToApply</option>
+        <option value="HuggingFace">HuggingFace</option>
+        <option value="Notification">Notification</option>
+        <option value="PersonalExperience">PersonalExperience</option>
+        <option value="Photo">Photo</option>
+        <option value="Review">Review</option>
+        <option value="Scholarship">Scholarship</option>
+        <option value="Specialization">Specialization</option>
+      </select>
+    </div>
+    <div class="controls">
+      <select id="diagram-theme" class="select-box">
+        <option value="default">Theme: Default</option>
+        <option value="forest">Theme: Forest</option>
+        <option value="dark">Theme: Dark</option>
+        <option value="neutral">Theme: Neutral</option>
+      </select>
+      <button class="btn btn-blue theme-toggle" id="theme-toggle">🌙</button>
+    </div>
+  </nav>
+  
+  <main>
+    <div class="dashboard">
+      <div class="stat-card">
+        <div class="stat-number">50</div>
+        <div class="stat-label">Total Diagrams</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">18</div>
+        <div class="stat-label">Controllers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">7</div>
+        <div class="stat-label">Create Operations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">9</div>
+        <div class="stat-label">List Operations</div>
+      </div>
+    </div>
+    
+    <div class="chart-container" style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+      <div style="flex: 1; background-color: var(--light-color); padding: 1rem; border-radius: 8px;">
+        <h3>Diagram Types Distribution</h3>
+        <canvas id="stats-chart" data-stats='{"totalDiagrams":50,"byType":{"list":9,"generic":15,"create":7,"show":5,"update":6,"delete":8},"byController":{"AdminStats":1,"ApplicationCriteria":0,"Auth":4,"Category":5,"Chat":1,"City":5,"":0,"Country":5,"Cv":3,"FavoriteScholarship":3,"HowToApply":0,"HuggingFace":0,"Notification":6,"PersonalExperience":0,"Photo":0,"Review":4,"Scholarship":8,"Specialization":5}}'></canvas>
+      </div>
+      <div style="flex: 1; background-color: var(--light-color); padding: 1rem; border-radius: 8px;">
+        <h3>Controller Distribution</h3>
+        <canvas id="controller-chart" data-stats='{"totalDiagrams":50,"byType":{"list":9,"generic":15,"create":7,"show":5,"update":6,"delete":8},"byController":{"AdminStats":1,"ApplicationCriteria":0,"Auth":4,"Category":5,"Chat":1,"City":5,"":0,"Country":5,"Cv":3,"FavoriteScholarship":3,"HowToApply":0,"HuggingFace":0,"Notification":6,"PersonalExperience":0,"Photo":0,"Review":4,"Scholarship":8,"Specialization":5}}'></canvas>
+      </div>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="all-diagrams">All Diagrams</div>
+      <div class="tab" data-tab="by-type">By Type</div>
+      <div class="tab" data-tab="by-controller">By Controller</div>
+    </div>
+    
+    <div id="all-diagrams" class="tab-content active">
+      <div class="diagram-grid">
+        
+      <div class="diagram-card" data-controller="AdminStats" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>AdminStats</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from AdminStatsController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span> <span class="model-tag">Country</span> <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AdminStatsController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Auth" data-method="register" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">register</div>
+          <div class="diagram-description">Handles register operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-register.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Auth" data-method="login" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">login</div>
+          <div class="diagram-description">Handles login operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-login.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Auth" data-method="logout" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">logout</div>
+          <div class="diagram-description">Handles logout operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-logout.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Auth" data-method="me" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">me</div>
+          <div class="diagram-description">Handles me operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-me.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Category" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Category" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Category" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Category" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Category" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Chat" data-method="handleChat" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Chat</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">handleChat</div>
+          <div class="diagram-description">Handles handleChat operation in ChatController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ChatController-handleChat.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="City" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="City" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="City" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="City" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="City" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Country" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Country" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Country" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Country" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Country" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Cv" data-method="generateCV" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateCV</div>
+          <div class="diagram-description">Handles generateCV operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateCV.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Cv" data-method="generateMotivationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateMotivationLetter</div>
+          <div class="diagram-description">Handles generateMotivationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateMotivationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Cv" data-method="generateRecommendationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateRecommendationLetter</div>
+          <div class="diagram-description">Handles generateRecommendationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateRecommendationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="add" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">add</div>
+          <div class="diagram-description">Creates a new resource in FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-add.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="remove" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">remove</div>
+          <div class="diagram-description">Removes a resource from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-remove.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="unread" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">unread</div>
+          <div class="diagram-description">Handles unread operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-unread.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="markAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAsRead</div>
+          <div class="diagram-description">Handles markAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="markAllAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAllAsRead</div>
+          <div class="diagram-description">Handles markAllAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAllAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Notification" data-method="sendToAll" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">sendToAll</div>
+          <div class="diagram-description">Handles sendToAll operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-sendToAll.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Review" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Review" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Review" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Review" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="getTopScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getTopScholarships</div>
+          <div class="diagram-description">Handles getTopScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getTopScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="getByCountry" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getByCountry</div>
+          <div class="diagram-description">Handles getByCountry operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getByCountry.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Scholarship" data-method="getSimilarScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getSimilarScholarships</div>
+          <div class="diagram-description">Handles getSimilarScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getSimilarScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Specialization" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Specialization" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Specialization" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Specialization" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="diagram-card" data-controller="Specialization" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      </div>
+    </div>
+    
+    <div id="by-type" class="tab-content">
+      
+      <div class="type-section">
+        <h3>List Operations (9)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="AdminStats" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>AdminStats</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from AdminStatsController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span> <span class="model-tag">Country</span> <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AdminStatsController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Category" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="type-section">
+        <h3>Show Operations (5)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Category" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="type-section">
+        <h3>Create Operations (7)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Category" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="add" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">add</div>
+          <div class="diagram-description">Creates a new resource in FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-add.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="type-section">
+        <h3>Update Operations (6)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Category" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="type-section">
+        <h3>Delete Operations (8)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Category" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="remove" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">remove</div>
+          <div class="diagram-description">Removes a resource from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-remove.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="type-section">
+        <h3>Generic Operations (15)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Auth" data-method="register" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">register</div>
+          <div class="diagram-description">Handles register operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-register.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="login" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">login</div>
+          <div class="diagram-description">Handles login operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-login.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="logout" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">logout</div>
+          <div class="diagram-description">Handles logout operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-logout.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="me" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">me</div>
+          <div class="diagram-description">Handles me operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-me.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Chat" data-method="handleChat" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Chat</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">handleChat</div>
+          <div class="diagram-description">Handles handleChat operation in ChatController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ChatController-handleChat.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateCV" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateCV</div>
+          <div class="diagram-description">Handles generateCV operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateCV.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateMotivationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateMotivationLetter</div>
+          <div class="diagram-description">Handles generateMotivationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateMotivationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateRecommendationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateRecommendationLetter</div>
+          <div class="diagram-description">Handles generateRecommendationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateRecommendationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="unread" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">unread</div>
+          <div class="diagram-description">Handles unread operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-unread.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="markAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAsRead</div>
+          <div class="diagram-description">Handles markAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="markAllAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAllAsRead</div>
+          <div class="diagram-description">Handles markAllAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAllAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="sendToAll" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">sendToAll</div>
+          <div class="diagram-description">Handles sendToAll operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-sendToAll.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getTopScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getTopScholarships</div>
+          <div class="diagram-description">Handles getTopScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getTopScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getByCountry" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getByCountry</div>
+          <div class="diagram-description">Handles getByCountry operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getByCountry.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getSimilarScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getSimilarScholarships</div>
+          <div class="diagram-description">Handles getSimilarScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getSimilarScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+    </div>
+    
+    <div id="by-controller" class="tab-content">
+      
+      <div class="controller-section">
+        <h3>AdminStats Controller (1)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="AdminStats" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>AdminStats</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from AdminStatsController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span> <span class="model-tag">Country</span> <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AdminStatsController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      
+      <div class="controller-section">
+        <h3>Auth Controller (4)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Auth" data-method="register" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">register</div>
+          <div class="diagram-description">Handles register operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-register.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="login" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">login</div>
+          <div class="diagram-description">Handles login operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-login.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="logout" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">logout</div>
+          <div class="diagram-description">Handles logout operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-logout.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Auth" data-method="me" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Auth</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">me</div>
+          <div class="diagram-description">Handles me operation in AuthController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_AuthController-me.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>Category Controller (5)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Category" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Category" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Category" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Category" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Category" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Category</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CategoryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Category</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CategoryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>Chat Controller (1)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Chat" data-method="handleChat" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Chat</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">handleChat</div>
+          <div class="diagram-description">Handles handleChat operation in ChatController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ChatController-handleChat.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>City Controller (5)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="City" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">City</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="City" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>City</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CityController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CityController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      
+      <div class="controller-section">
+        <h3>Country Controller (5)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Country" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Country" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Country</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from CountryController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CountryController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>Cv Controller (3)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateCV" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateCV</div>
+          <div class="diagram-description">Handles generateCV operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateCV.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateMotivationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateMotivationLetter</div>
+          <div class="diagram-description">Handles generateMotivationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateMotivationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Cv" data-method="generateRecommendationLetter" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Cv</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">generateRecommendationLetter</div>
+          <div class="diagram-description">Handles generateRecommendationLetter operation in CvController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_CvController-generateRecommendationLetter.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>FavoriteScholarship Controller (3)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="add" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">add</div>
+          <div class="diagram-description">Creates a new resource in FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-add.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="remove" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">remove</div>
+          <div class="diagram-description">Removes a resource from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-remove.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="FavoriteScholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>FavoriteScholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from FavoriteScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_FavoriteScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      
+      
+      <div class="controller-section">
+        <h3>Notification Controller (6)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Notification" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="unread" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">unread</div>
+          <div class="diagram-description">Handles unread operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-unread.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="markAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAsRead</div>
+          <div class="diagram-description">Handles markAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="markAllAsRead" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">markAllAsRead</div>
+          <div class="diagram-description">Handles markAllAsRead operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-markAllAsRead.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Notification" data-method="sendToAll" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Notification</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">sendToAll</div>
+          <div class="diagram-description">Handles sendToAll operation in NotificationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_NotificationController-sendToAll.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      
+      
+      <div class="controller-section">
+        <h3>Review Controller (4)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Review" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Review" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Review</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ReviewController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ReviewController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>Scholarship Controller (8)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getTopScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getTopScholarships</div>
+          <div class="diagram-description">Handles getTopScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span> <span class="model-tag">User</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getTopScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getByCountry" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getByCountry</div>
+          <div class="diagram-description">Handles getByCountry operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Country</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getByCountry.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Scholarship" data-method="getSimilarScholarships" data-type="generic">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-generic">GENERIC</div>
+          <h4>Scholarship</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">getSimilarScholarships</div>
+          <div class="diagram-description">Handles getSimilarScholarships operation in ScholarshipController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Scholarship</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_ScholarshipController-getSimilarScholarships.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+      
+      <div class="controller-section">
+        <h3>Specialization Controller (5)</h3>
+        <div class="diagram-grid">
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="index" data-type="list">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-list">LIST</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">index</div>
+          <div class="diagram-description">Retrieves a collection of resources from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-index.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="store" data-type="create">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-create">CREATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">store</div>
+          <div class="diagram-description">Creates a new resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-store.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="show" data-type="show">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-show">SHOW</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">show</div>
+          <div class="diagram-description">Retrieves a specific resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            <span class="model-tag">Specialization</span>
+            
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-show.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="update" data-type="update">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-update">UPDATE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">update</div>
+          <div class="diagram-description">Updates an existing resource in SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-update.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+          
+      <div class="diagram-card" data-controller="Specialization" data-method="destroy" data-type="delete">
+        <div class="diagram-header">
+          <div class="diagram-badge badge-delete">DELETE</div>
+          <h4>Specialization</h4>
+        </div>
+        <div class="diagram-body">
+          <div class="diagram-title">destroy</div>
+          <div class="diagram-description">Removes a resource from SpecializationController</div>
+        </div>
+        <div class="diagram-footer">
+          <div class="diagram-models">
+            
+            <span style="font-style: italic; opacity: 0.7;">No models</span>
+          </div>
+          <div class="diagram-actions">
+            <a href="view_SpecializationController-destroy.html" class="action-btn view-btn" title="View Diagram">
+              <i class="fas fa-eye"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+        </div>
+      </div>
+      
+    </div>
+  </main>
+  
+  <footer>
+    <p>Generated on 7/14/2026 at 10:04:30 PM</p>
+    <p>Sequence Diagram Generator for Laravel</p>
+  </footer>
+  
+  <script src="assets/script.js"></script>
+</body>
+</html>
+  

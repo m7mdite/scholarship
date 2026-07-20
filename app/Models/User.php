@@ -90,10 +90,7 @@ class User extends Authenticatable
             ->withPivot('created_at', 'updated_at')
             ->withTimestamps('created_at', 'updated_at');
     }
-    public function preferences()
-    {
-        return $this->hasOne(UserPreference::class);
-    }
+    
     public function notifications()
     {
         return $this->hasMany(Notification::class);

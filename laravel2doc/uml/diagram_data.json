@@ -1,0 +1,826 @@
+{
+  "models": [
+    {
+      "name": "ApplicationCriteria",
+      "properties": [
+        {
+          "name": "requirment_type",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "application_criteria_value",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "application_criteria_description",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "scholarship_id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "application_criterias"
+    },
+    {
+      "name": "Category",
+      "properties": [
+        {
+          "name": "category_name",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "categories"
+    },
+    {
+      "name": "City",
+      "properties": [
+        {
+          "name": "city_name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "country_id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "cities"
+    },
+    {
+      "name": "Country",
+      "properties": [
+        {
+          "name": "country_name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "country_rate",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "countries"
+    },
+    {
+      "name": "FavoriteScholarship",
+      "properties": [
+        {
+          "name": "scholarship_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "user_id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "favorite_scholarships"
+    },
+    {
+      "name": "HowToApply",
+      "properties": [
+        {
+          "name": "how_to_apply_description",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "how_to_applies"
+    },
+    {
+      "name": "Notification",
+      "properties": [
+        {
+          "name": "user_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "type",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "title",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "body",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "data",
+          "type": "fillable",
+          "dataType": "array"
+        },
+        {
+          "name": "read_at",
+          "type": "fillable",
+          "dataType": "datetime"
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models"
+    },
+    {
+      "name": "PersonalExperience",
+      "properties": [
+        {
+          "name": "personal_experiences_description",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "personal_experiences"
+    },
+    {
+      "name": "Photo",
+      "properties": [
+        {
+          "name": "image_path",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "city_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "photos"
+    },
+    {
+      "name": "Review",
+      "properties": [
+        {
+          "name": "scholarship_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "reviewer_name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "review",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "rating",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models"
+    },
+    {
+      "name": "Scholarship",
+      "properties": [
+        {
+          "name": "scholarship_name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "degree",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "finance",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "scholarship_description",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "donar",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "finished_date",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "start_date",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "scholarship_language",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "country_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "city_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "specialization_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "category_id",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "scholarship_link",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "scholarships"
+    },
+    {
+      "name": "Specialization",
+      "properties": [
+        {
+          "name": "specialization_name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "category_id",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "specializations"
+    },
+    {
+      "name": "User",
+      "properties": [
+        {
+          "name": "name",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "email",
+          "type": "fillable",
+          "dataType": ""
+        },
+        {
+          "name": "password",
+          "type": "fillable",
+          "dataType": ""
+        }
+      ],
+      "methods": [],
+      "namespace": "App\\Models",
+      "tableName": "users"
+    }
+  ],
+  "controllers": [
+    {
+      "name": "AdminStatsController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "ApplicationCriteriaController",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "AuthController",
+      "methods": [
+        {
+          "name": "register",
+          "params": "Request $request"
+        },
+        {
+          "name": "login",
+          "params": "Request $request"
+        },
+        {
+          "name": "logout",
+          "params": "Request $request"
+        },
+        {
+          "name": "me",
+          "params": "Request $request"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "CategoryController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        },
+        {
+          "name": "store",
+          "params": "Request $request"
+        },
+        {
+          "name": "show",
+          "params": "$id"
+        },
+        {
+          "name": "update",
+          "params": "Request $request, $id"
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "ChatController",
+      "methods": [
+        {
+          "name": "handleChat",
+          "params": "Request $request"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "CityController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        },
+        {
+          "name": "store",
+          "params": "Request $request"
+        },
+        {
+          "name": "show",
+          "params": "$id"
+        },
+        {
+          "name": "update",
+          "params": "Request $request, $id"
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "Controller",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "CountryController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        },
+        {
+          "name": "store",
+          "params": "Request $request"
+        },
+        {
+          "name": "show",
+          "params": "$id"
+        },
+        {
+          "name": "update",
+          "params": "Request $request, $id"
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "CvController",
+      "methods": [
+        {
+          "name": "generateCV",
+          "params": "Request $request"
+        },
+        {
+          "name": "generateMotivationLetter",
+          "params": "Request $request"
+        },
+        {
+          "name": "generateRecommendationLetter",
+          "params": "Request $request"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "FavoriteScholarshipController",
+      "methods": [
+        {
+          "name": "add",
+          "params": "Request $request, $scholarshipId"
+        },
+        {
+          "name": "remove",
+          "params": "Request $request, $scholarshipId"
+        },
+        {
+          "name": "index",
+          "params": "Request $request"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "HowToApplyController",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "HuggingFaceController",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "NotificationController",
+      "methods": [
+        {
+          "name": "index",
+          "params": "Request $request"
+        },
+        {
+          "name": "unread",
+          "params": "Request $request"
+        },
+        {
+          "name": "markAsRead",
+          "params": "$id"
+        },
+        {
+          "name": "markAllAsRead",
+          "params": ""
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        },
+        {
+          "name": "sendToAll",
+          "params": "Request $request"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "PersonalExperienceController",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "PhotoController",
+      "methods": [],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "ReviewController",
+      "methods": [
+        {
+          "name": "index",
+          "params": "$scholarshipId"
+        },
+        {
+          "name": "store",
+          "params": "Request $request, $scholarshipId"
+        },
+        {
+          "name": "update",
+          "params": "Request $request, $id"
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "ScholarshipController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        },
+        {
+          "name": "getTopScholarships",
+          "params": "Request $request"
+        },
+        {
+          "name": "getByCountry",
+          "params": "int $countryId"
+        },
+        {
+          "name": "store",
+          "params": "StoreScholarshipRequest $request"
+        },
+        {
+          "name": "show",
+          "params": "int $id"
+        },
+        {
+          "name": "update",
+          "params": "UpdateScholarshipRequest $request, int $id"
+        },
+        {
+          "name": "destroy",
+          "params": "int $id"
+        },
+        {
+          "name": "getSimilarScholarships",
+          "params": "int $id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    },
+    {
+      "name": "SpecializationController",
+      "methods": [
+        {
+          "name": "index",
+          "params": ""
+        },
+        {
+          "name": "store",
+          "params": "Request $request"
+        },
+        {
+          "name": "show",
+          "params": "$id"
+        },
+        {
+          "name": "update",
+          "params": "Request $request, $id"
+        },
+        {
+          "name": "destroy",
+          "params": "$id"
+        }
+      ],
+      "namespace": "App\\Http\\Controllers"
+    }
+  ],
+  "services": [],
+  "relationships": [
+    {
+      "sourceModel": "ApplicationCriteria",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "City",
+      "relationshipType": "belongsTo",
+      "relationshipName": "country",
+      "targetModel": "Country::class"
+    },
+    {
+      "sourceModel": "FavoriteScholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "FavoriteScholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "user",
+      "targetModel": "User::class"
+    },
+    {
+      "sourceModel": "HowToApply",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "Notification",
+      "relationshipType": "belongsTo",
+      "relationshipName": "user",
+      "targetModel": "User::class"
+    },
+    {
+      "sourceModel": "PersonalExperience",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "Photo",
+      "relationshipType": "belongsTo",
+      "relationshipName": "city",
+      "targetModel": "City::class"
+    },
+    {
+      "sourceModel": "Photo",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "Review",
+      "relationshipType": "belongsTo",
+      "relationshipName": "scholarship",
+      "targetModel": "Scholarship::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasOne",
+      "relationshipName": "howToApply",
+      "targetModel": "HowToApply::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "notifications",
+      "targetModel": "Notification::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "photos",
+      "targetModel": "Photo::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "applicationCriteria",
+      "targetModel": "ApplicationCriteria::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "favoriteByUsers",
+      "targetModel": "FavoriteScholarship::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "personalExperiences",
+      "targetModel": "PersonalExperience::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "hasMany",
+      "relationshipName": "reviews",
+      "targetModel": "Review::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "country",
+      "targetModel": "Country::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "city",
+      "targetModel": "City::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "specialization",
+      "targetModel": "Specialization::class"
+    },
+    {
+      "sourceModel": "Scholarship",
+      "relationshipType": "belongsTo",
+      "relationshipName": "category",
+      "targetModel": "Category::class"
+    },
+    {
+      "sourceModel": "Specialization",
+      "relationshipType": "belongsTo",
+      "relationshipName": "category",
+      "targetModel": "Category::class"
+    },
+    {
+      "sourceModel": "User",
+      "relationshipType": "hasMany",
+      "relationshipName": "notifications",
+      "targetModel": "Notification::class"
+    },
+    {
+      "sourceModel": "User",
+      "relationshipType": "belongsToMany",
+      "relationshipName": "favoriteScholarships",
+      "targetModel": "Scholarship::class"
+    }
+  ],
+  "directories": {
+    ".": {
+      "models": [
+        "ApplicationCriteria",
+        "Category",
+        "City",
+        "Country",
+        "FavoriteScholarship",
+        "HowToApply",
+        "Notification",
+        "PersonalExperience",
+        "Photo",
+        "Review",
+        "Scholarship",
+        "Specialization",
+        "User"
+      ],
+      "controllers": [
+        "AdminStatsController",
+        "ApplicationCriteriaController",
+        "AuthController",
+        "CategoryController",
+        "ChatController",
+        "CityController",
+        "Controller",
+        "CountryController",
+        "CvController",
+        "FavoriteScholarshipController",
+        "HowToApplyController",
+        "HuggingFaceController",
+        "NotificationController",
+        "PersonalExperienceController",
+        "PhotoController",
+        "ReviewController",
+        "ScholarshipController",
+        "SpecializationController"
+      ]
+    }
+  }
+}
