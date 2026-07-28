@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\SocketService;
 use App\Models\User;
 
 class NotificationController extends Controller
@@ -115,13 +116,22 @@ class NotificationController extends Controller
     // (دالة مساعدة) إنشاء إشعار جديد (سيتم استدعاؤها من أماكن مختلفة)
     public static function create($userId, $type='info', $title, $body, $data = null)
     {
-        return Notification::create([
-            'user_id' => $userId,
-            'type' => $type,
-            'title' => $title,
-            'body' => $body,
-            'data' => $data,
-        ]);
+        $notification = Notification::create([
+        'user_id' => $userId,
+        'type'    => $type,
+        'title'   => $title,
+        'body'    => $body,
+        'data'    => $data,
+    ]);
+
+    // إرسال فوري عبر Socket.io لغرفة المستخدم الخاصة
+    app(SocketService::class)->emit(
+        'new_notification',
+        $notification->toArray(),
+        "user_{$userId}"
+    );
+
+    return $notification;
     }
 
 

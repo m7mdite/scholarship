@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+    <html lang="ar" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>مخطط ERD - scholarship</title>
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                background: rgba(255,255,255,0.95);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+                margin-bottom: 10px;
+                font-size: 32px;
+            }
+            .subtitle {
+                text-align: center;
+                color: #666;
+                margin-bottom: 30px;
+                font-size: 14px;
+            }
+            .erd-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+            .table-card {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid #e0e0e0;
+                min-width: 220px;
+                max-width: 280px;
+                flex: 1 0 auto;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .table-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            }
+            .table-header {
+                background: linear-gradient(135deg, #4a90d9, #357abd);
+                color: white;
+                padding: 12px 16px;
+                font-weight: bold;
+                font-size: 16px;
+                border-radius: 12px 12px 0 0;
+                text-align: center;
+                position: relative;
+                word-break: break-all;
+            }
+            .table-header .row-count {
+                font-size: 11px;
+                opacity: 0.8;
+                font-weight: normal;
+                display: block;
+                margin-top: 3px;
+            }
+            .column-list {
+                padding: 4px 0;
+            }
+            .column-item {
+                padding: 7px 14px;
+                border-bottom: 1px solid #f0f0f0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 13px;
+                transition: background 0.2s;
+            }
+            .column-item:hover {
+                background: #f8f9fe;
+            }
+            .column-item:last-child {
+                border-bottom: none;
+            }
+            .col-name {
+                font-weight: 500;
+                color: #333;
+                font-size: 13px;
+            }
+            .col-type {
+                color: #888;
+                font-size: 11px;
+                background: #f0f0f0;
+                padding: 2px 8px;
+                border-radius: 10px;
+                margin-left: 8px;
+            }
+            .col-badges {
+                display: flex;
+                gap: 4px;
+                align-items: center;
+            }
+            .badge {
+                font-size: 10px;
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+            }
+            .badge-pk {
+                background: #fee2e2;
+                color: #dc2626;
+            }
+            .badge-fk {
+                background: #dbeafe;
+                color: #2563eb;
+            }
+            .badge-null {
+                background: #f3f4f6;
+                color: #9ca3af;
+                font-weight: normal;
+            }
+            .badge-index {
+                background: #fef3c7;
+                color: #d97706;
+            }
+            .badge-auto {
+                background: #d1fae5;
+                color: #059669;
+            }
+            .relations {
+                margin-top: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 12px;
+            }
+            .relations h2 {
+                color: #333;
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            .relation-item {
+                display: inline-block;
+                background: white;
+                padding: 8px 16px;
+                margin: 4px 8px 4px 0;
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                font-size: 13px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .relation-item .arrow {
+                color: #4a90d9;
+                font-weight: bold;
+                margin: 0 8px;
+            }
+            .stats {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                margin-bottom: 25px;
+                flex-wrap: wrap;
+            }
+            .stat-box {
+                text-align: center;
+                padding: 10px 25px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                min-width: 120px;
+            }
+            .stat-box .number {
+                font-size: 28px;
+                font-weight: bold;
+                color: #4a90d9;
+            }
+            .stat-box .label {
+                font-size: 12px;
+                color: #666;
+                margin-top: 4px;
+            }
+            .download-btn {
+                display: inline-block;
+                background: #4a90d9;
+                color: white;
+                padding: 10px 30px;
+                border-radius: 8px;
+                text-decoration: none;
+                margin-top: 15px;
+                font-weight: bold;
+                transition: background 0.3s;
+                border: none;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            .download-btn:hover {
+                background: #357abd;
+            }
+            .print-btn {
+                background: #6b7280;
+            }
+            .print-btn:hover {
+                background: #4b5563;
+            }
+            .btn-group {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-top: 20px;
+            }
+            @media print {
+                body { background: white; padding: 0; }
+                .container { box-shadow: none; padding: 15px; }
+                .table-card:hover { transform: none; }
+                .btn-group { display: none; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📊 مخطط العلاقات (ERD)</h1>
+            <div class="subtitle">قاعدة البيانات: scholarship | تم الإنشاء: 2026-07-20 23:44:39</div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="number">24</div>
+                    <div class="label">📋 الجداول</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">15</div>
+                    <div class="label">🔗 العلاقات</div>
+                </div>
+            </div>
+            
+            <div class="erd-container"><div class="table-card">
+            <div class="table-header">
+                agent_conversation_messages
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">varchar(36)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">conversation_id</span>
+                    <span class="col-type">varchar(36)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">agent</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">role</span>
+                    <span class="col-type">varchar(25)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">content</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">attachments</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">tool_calls</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">tool_results</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">usage</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">meta</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                agent_conversations
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">varchar(36)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">title</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                application_criterias
+                <span class="row-count">25 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">requirment_type</span>
+                    <span class="col-type">varchar(20)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">application_criteria_value</span>
+                    <span class="col-type">varchar(30)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">application_criteria_description</span>
+                    <span class="col-type">varchar(100)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                cache
+                <span class="row-count">4 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">key</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">value</span>
+                    <span class="col-type">mediumtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">expiration</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                cache_locks
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">key</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">owner</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">expiration</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                categories
+                <span class="row-count">15 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">category_name</span>
+                    <span class="col-type">varchar(30)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                cities
+                <span class="row-count">104 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">city_name</span>
+                    <span class="col-type">varchar(25)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">country_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                countries
+                <span class="row-count">24 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">country_name</span>
+                    <span class="col-type">varchar(30)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">country_rate</span>
+                    <span class="col-type">double</span>
+                </span>
+                <span class="col-badges"></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                failed_jobs
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">uuid</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">connection</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">queue</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">payload</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">exception</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">failed_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                favorite_scholarships
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                how_to_applies
+                <span class="row-count">10 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">how_to_apply_description</span>
+                    <span class="col-type">varchar(400)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                job_batches
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">name</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">total_jobs</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">pending_jobs</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">failed_jobs</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">failed_job_ids</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">options</span>
+                    <span class="col-type">mediumtext</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">cancelled_at</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">finished_at</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                jobs
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">queue</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">payload</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">attempts</span>
+                    <span class="col-type">tinyint(3) unsigned</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">reserved_at</span>
+                    <span class="col-type">int(10) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">available_at</span>
+                    <span class="col-type">int(10) unsigned</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">int(10) unsigned</span>
+                </span>
+                <span class="col-badges"></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                migrations
+                <span class="row-count">17 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">int(10) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">migration</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">batch</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                notifications
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">type</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">title</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">body</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">data</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">read_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                password_reset_tokens
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">email</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">token</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                personal_access_tokens
+                <span class="row-count">1 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">tokenable_type</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">tokenable_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">name</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">token</span>
+                    <span class="col-type">varchar(64)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">abilities</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">last_used_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">expires_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                personal_experiences
+                <span class="row-count">0 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">personal_experiences_description</span>
+                    <span class="col-type">varchar(25)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                photos
+                <span class="row-count">20 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">image_path</span>
+                    <span class="col-type">varchar(200)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">city_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                reviews
+                <span class="row-count">19 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">reviewer_name</span>
+                    <span class="col-type">varchar(100)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">review</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">rating</span>
+                    <span class="col-type">tinyint(3) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                scholarships
+                <span class="row-count">20 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_name</span>
+                    <span class="col-type">varchar(50)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">degree</span>
+                    <span class="col-type">varchar(40)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">finance</span>
+                    <span class="col-type">varchar(40)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_description</span>
+                    <span class="col-type">varchar(500)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">donar</span>
+                    <span class="col-type">varchar(40)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">finished_date</span>
+                    <span class="col-type">date</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">start_date</span>
+                    <span class="col-type">date</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_language</span>
+                    <span class="col-type">varchar(30)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">scholarship_link</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">country_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">city_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">specialization_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">category_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                sessions
+                <span class="row-count">3 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">ip_address</span>
+                    <span class="col-type">varchar(45)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">user_agent</span>
+                    <span class="col-type">text</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">payload</span>
+                    <span class="col-type">longtext</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">last_activity</span>
+                    <span class="col-type">int(11)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-index">IDX</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                specializations
+                <span class="row-count">50 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">specialization_name</span>
+                    <span class="col-type">varchar(30)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">category_id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-fk">FK</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div><div class="table-card">
+            <div class="table-header">
+                users
+                <span class="row-count">16 صف</span>
+            </div>
+            <div class="column-list"><div class="column-item">
+                <span>
+                    <span class="col-name">id</span>
+                    <span class="col-type">bigint(20) unsigned</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-pk">PK</span><span class="badge badge-auto">AI</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">name</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">email</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">email_verified_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">password</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">role</span>
+                    <span class="col-type">varchar(255)</span>
+                </span>
+                <span class="col-badges"></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">remember_token</span>
+                    <span class="col-type">varchar(100)</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">created_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div><div class="column-item">
+                <span>
+                    <span class="col-name">updated_at</span>
+                    <span class="col-type">timestamp</span>
+                </span>
+                <span class="col-badges"><span class="badge badge-null">NULL</span></span>
+            </div></div></div></div><div class="relations">
+            <h2>🔗 العلاقات بين الجداول</h2><div class="relation-item">
+                <strong>application_criterias</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>cities</strong>
+                .<span style="color:#666;">country_id</span>
+                <span class="arrow">➜</span>
+                <strong>countries</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>favorite_scholarships</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>favorite_scholarships</strong>
+                .<span style="color:#666;">user_id</span>
+                <span class="arrow">➜</span>
+                <strong>users</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>how_to_applies</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>notifications</strong>
+                .<span style="color:#666;">user_id</span>
+                <span class="arrow">➜</span>
+                <strong>users</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>personal_experiences</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>photos</strong>
+                .<span style="color:#666;">city_id</span>
+                <span class="arrow">➜</span>
+                <strong>cities</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>photos</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>reviews</strong>
+                .<span style="color:#666;">scholarship_id</span>
+                <span class="arrow">➜</span>
+                <strong>scholarships</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>scholarships</strong>
+                .<span style="color:#666;">category_id</span>
+                <span class="arrow">➜</span>
+                <strong>categories</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>scholarships</strong>
+                .<span style="color:#666;">city_id</span>
+                <span class="arrow">➜</span>
+                <strong>cities</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>scholarships</strong>
+                .<span style="color:#666;">country_id</span>
+                <span class="arrow">➜</span>
+                <strong>countries</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>scholarships</strong>
+                .<span style="color:#666;">specialization_id</span>
+                <span class="arrow">➜</span>
+                <strong>specializations</strong>
+                .<span style="color:#666;">id</span>
+            </div><div class="relation-item">
+                <strong>specializations</strong>
+                .<span style="color:#666;">category_id</span>
+                <span class="arrow">➜</span>
+                <strong>categories</strong>
+                .<span style="color:#666;">id</span>
+            </div></div>
+            <div class="btn-group">
+                <button class="download-btn" onclick="window.print()">🖨️ طباعة / حفظ كـ PDF</button>
+                <button class="download-btn print-btn" onclick="downloadAsImage()">📥 حفظ كـ صورة</button>
+            </div>
+        </div>
+        
+        <script>
+            function downloadAsImage() {
+                // استخدام html2canvas لتحويل الصفحة إلى صورة
+                var script = document.createElement("script");
+                script.src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js";
+                document.head.appendChild(script);
+                script.onload = function() {
+                    html2canvas(document.querySelector(".container"), {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: "#ffffff"
+                    }).then(function(canvas) {
+                        var link = document.createElement("a");
+                        link.download = "erd-diagram.png";
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                    });
+                };
+            }
+        </script>
+    </body>
+    </html>

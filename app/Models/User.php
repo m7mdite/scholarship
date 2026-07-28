@@ -74,15 +74,7 @@ class User extends Authenticatable
         ];
     }
 
-    // public function favoriteScholarships()
-    // {
-    //     return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id');
-    // }
-    // public function favoriteScholarships()
-    // {
-    //     return $this->belongsToMany(Scholarship::class, 'favorite_scholarships', 'user_id', 'scholarship_id');
-    //         // ->withTimestamps();
-    // }
+    
 
     public function favoriteScholarships()
     {

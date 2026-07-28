@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CountryController extends Controller
 {
-    // جلب جميع الدول
     public function index()
     {
         $countries = Country::all();
@@ -18,8 +15,6 @@ class CountryController extends Controller
             'data' => $countries
         ], 200);
     }
-
-    // إضافة دولة جديدة
     public function store(Request $request)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -33,17 +28,13 @@ class CountryController extends Controller
             'country_name' => 'required|string|max:30',
             'country_rate' => 'required|numeric',
         ]);
-
         $country = Country::create($validated);
-
         return response()->json([
             'status' => 'success',
             'message' => 'تمت إضافة الدولة بنجاح',
             'data' => $country
         ], 201);
     }
-
-    // عرض دولة محددة
     public function show($id)
     {
         $country = Country::find($id);
@@ -60,8 +51,6 @@ class CountryController extends Controller
             'data' => $country
         ], 200);
     }
-
-    // تحديث دولة
     public function update(Request $request, $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -79,22 +68,17 @@ class CountryController extends Controller
                 'data' => null
             ], 404);
         }
-
         $validated = $request->validate([
             'country_name' => 'sometimes|string|max:30',
             'country_rate' => 'sometimes|numeric',
         ]);
-
         $country->update($validated);
-
         return response()->json([
             'status' => 'success',
             'message' => 'تم تحديث الدولة بنجاح',
             'data' => $country
         ], 200);
     }
-
-    // حذف دولة
     public function destroy($id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -112,9 +96,7 @@ class CountryController extends Controller
                 'data' => null
             ], 404);
         }
-
         $country->delete();
-
         return response()->json([
             'status' => 'success',
             'message' => 'تم حذف الدولة بنجاح',
