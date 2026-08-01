@@ -186,6 +186,7 @@ public function sendToAll(Request $request)
             'sent_to' => $count,
             'title' => $validated['title'],
             'body' => $validated['body'],
+            
         ]
     ], 201);
 }

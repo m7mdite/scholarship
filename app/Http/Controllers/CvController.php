@@ -5,18 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Log;
-use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Http;
+use App\Models\UserAction;
 
 class CvController extends Controller
 {
-
-
     /**
      * تحسين النبذة المهنية باستخدام Ollama محلياً (أو أي مزود آخر حسب الإعدادات)
      * في حال الفشل، تُرجع النص الأصلي.
      */
-    private function enhanceBio($bio, $specialization, $language)
+    private function enhanceBio(string $bio, string $specialization, string $language): string
     {
         $provider = env('AI_PROVIDER', 'ollama');
         if ($provider === 'ollama' || $provider === 'failover') {
@@ -25,16 +23,20 @@ class CvController extends Controller
         return $bio;
     }
 
-
-    private function enhanceWithOllama($bio, $specialization, $language)
+    /**
+     * تحسين النص باستخدام Ollama (محلي)
+     */
+    private function enhanceWithOllama(string $bio, string $specialization, string $language): string
     {
         $ollamaUrl = env('OLLAMA_URL', 'http://localhost:11434');
         $model = env('OLLAMA_MODEL', 'llama3.1');
+
         if ($language === 'arabic') {
             $prompt = "أعد صياغة النص التالي ليكون نبذة مهنية مميزة وجذابة لتخصص '$specialization'، مع الحفاظ على المعنى الأساسي. اجعل النص احترافياً ومؤثراً، ولا تزد عن 150 كلمة:\n\n$bio";
         } else {
             $prompt = "Rewrite the following professional summary to be more compelling and impressive for a '$specialization' specialist. Keep the core meaning but make it highly professional and impactful. Max 150 words:\n\n$bio";
         }
+
         try {
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
                 ->post($ollamaUrl . '/api/chat', [
@@ -49,6 +51,21 @@ class CvController extends Controller
 
             if ($response->successful()) {
                 $result = $response->json();
+                
+                // تسجيل عملية تحسين النبذة (فقط إذا كان المستخدم مسجلاً)
+                $userId = auth()->guard()->id();
+                if ($userId) {
+                    UserAction::create([
+                        'user_id' => $userId,
+                        'action' => 'ai_enhance_bio',
+                        'metadata' => [
+                            'bio_length' => strlen($bio),
+                            'language' => $language,
+                            'specialization' => $specialization,
+                        ],
+                    ]);
+                }
+
                 return $result['message']['content'] ?? $bio;
             } else {
                 Log::warning("Ollama API failed (status {$response->status()}): " . $response->body());
@@ -59,7 +76,8 @@ class CvController extends Controller
             return $bio;
         }
     }
-    // ============================================================  سيفي  ====================
+
+    // ============================================================  السيرة الذاتية (CV)  ====================
     public function generateCV(Request $request)
     {
         $validated = $request->validate([
@@ -75,7 +93,13 @@ class CvController extends Controller
             'specialization' => 'required|string|max:100',
             'bio' => 'required|string|min:20',
         ]);
-        
+
+        // تحسين النبذة باستخدام الذكاء الاصطناعي
+        $enhancedBio = $this->enhanceBio(
+            $validated['bio'],
+            $validated['specialization'],
+            $validated['language']
+        );
 
         $data = [
             'full_name' => $validated['full_name'],
@@ -85,11 +109,12 @@ class CvController extends Controller
             'skills' => $validated['skills'],
             'age' => $validated['age'] ?? '',
             'specialization' => $validated['specialization'],
-            'bio' => $validated['bio'],
+            'bio' => $enhancedBio,
         ];
+
         $view = ($validated['language'] === 'arabic') ? 'cv.arabic' : 'cv.english';
-        $data['bio'] = $this->enhanceBio($validated['bio'], $validated['specialization'], $validated['language']);
         $html = view($view, $data)->render();
+
         try {
             $mpdf = new Mpdf([
                 'mode' => 'utf-8',
@@ -106,9 +131,25 @@ class CvController extends Controller
             if ($validated['language'] === 'arabic') {
                 $mpdf->SetDirectionality('rtl');
             }
+
             $mpdf->WriteHTML($html);
             $pdfContent = $mpdf->Output('', 'S');
             $fileName = 'CV_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['full_name']) . '.pdf';
+
+            // تسجيل عملية توليد السيرة الذاتية (فقط إذا كان المستخدم مسجلاً)
+            $userId = auth()->guard()->id();
+            if ($userId) {
+                UserAction::create([
+                    'user_id' => $userId,
+                    'action' => 'generate_cv',
+                    'metadata' => [
+                        'specialization' => $validated['specialization'],
+                        'language' => $validated['language'],
+                        'bio_length' => strlen($validated['bio']),
+                    ],
+                ]);
+            }
+
             return response($pdfContent, 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
@@ -121,7 +162,8 @@ class CvController extends Controller
             ], 500);
         }
     }
-    // ======================================================= رسالة الدافع =======================================================
+
+    // ======================================================= رسالة الدافع (Motivation Letter) =======================================================
     public function generateMotivationLetter(Request $request)
     {
         $validated = $request->validate([
@@ -169,13 +211,30 @@ class CvController extends Controller
             }
 
             $mpdf->WriteHTML($html);
-            return $mpdf->Output('Motivation_Letter_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['full_name']) . '.pdf', 'D');
+            $fileName = 'Motivation_Letter_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['full_name']) . '.pdf';
+
+            // تسجيل عملية توليد رسالة الدافع (فقط إذا كان المستخدم مسجلاً)
+            $userId = auth()->guard()->id();
+            if ($userId) {
+                UserAction::create([
+                    'user_id' => $userId,
+                    'action' => 'generate_motivation',
+                    'metadata' => [
+                        'scholarship_name' => $validated['scholarship_name'],
+                        'specialization' => $validated['specialization'],
+                        'language' => $validated['language'],
+                    ],
+                ]);
+            }
+
+            return $mpdf->Output($fileName, 'D');
         } catch (\Exception $e) {
             Log::error('Motivation letter generation failed: ' . $e->getMessage());
             return response()->json(['status' => 'error', 'message' => 'فشل إنشاء ملف PDF'], 500);
         }
     }
-    // ======================================================= رسالة التوصية =======================================================
+
+    // ======================================================= رسالة التوصية (Recommendation Letter) =======================================================
     public function generateRecommendationLetter(Request $request)
     {
         $validated = $request->validate([
@@ -185,8 +244,8 @@ class CvController extends Controller
             'student_name' => 'required|string|max:100',
             'student_age' => 'required|integer|min:16|max:100',
             'specialization' => 'required|string|max:200',
-            'university' => 'nullable|string|max:200',      // اختياري
-            'scholarship_name' => 'nullable|string|max:200', // اختياري
+            'university' => 'nullable|string|max:200',
+            'scholarship_name' => 'nullable|string|max:200',
         ]);
 
         $data = [
@@ -222,6 +281,21 @@ class CvController extends Controller
 
             $mpdf->WriteHTML($html);
             $fileName = 'Recommendation_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['student_name']) . '.pdf';
+
+            // تسجيل عملية توليد رسالة التوصية (فقط إذا كان المستخدم مسجلاً)
+            $userId = auth()->guard()->id();
+            if ($userId) {
+                UserAction::create([
+                    'user_id' => $userId,
+                    'action' => 'generate_recommendation',
+                    'metadata' => [
+                        'student_name' => $validated['student_name'],
+                        'specialization' => $validated['specialization'],
+                        'language' => $validated['language'],
+                    ],
+                ]);
+            }
+
             return $mpdf->Output($fileName, 'D');
         } catch (\Exception $e) {
             Log::error('Recommendation letter generation failed: ' . $e->getMessage());
