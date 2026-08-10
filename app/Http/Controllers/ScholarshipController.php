@@ -55,6 +55,7 @@ class ScholarshipController extends Controller
         'country_id' => $request->input('country'),
         'category_id' => $request->input('category'),
         'degree' => $request->input('degree'),
+        'specialization_id' => $request->input('specialization'),
         'finance' => $request->input('finance'),
     ];
     $filters = array_filter($filters, fn($v) => !is_null($v) && $v !== '' && $v !== 0);
@@ -101,6 +102,8 @@ class ScholarshipController extends Controller
                     $query->where('country_id', $value);
                 } elseif ($column === 'category_id') {
                     $query->where('category_id', $value);
+                } elseif ($column === 'specialization_id') {
+                    $query->where('specialization_id', $value);
                 }
             }
             $message = 'تم جلب المنح حسب الفلتر';

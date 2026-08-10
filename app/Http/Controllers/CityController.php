@@ -4,32 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Scholarship;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CityController extends Controller
 {
-    // جلب جميع المدن
+    /**
+     * جلب المدن بناءً على صلاحية المستخدم
+     * - Admin: جميع المدن
+     * - غير Admin: المدن التي لها منح فقط
+     */
     public function index()
     {
-        $cities = City::with('country')->get();
+        $user = Auth::user();
+
+        // إذا كان المستخدم Admin، يجلب جميع المدن
+        if ($user && $user->role === 'admin') {
+            $cities = City::with('country')->get();
+            $message = 'تم جلب جميع المدن بنجاح (صلاحية مدير)';
+        } else {
+            // جلب المدن التي لها منح دراسية (منح نشطة أو غير منتهية)
+            $cities = City::whereHas('scholarships', function ($query) {
+                // اختياري: يمكنك إضافة شرط لجلب المدن التي لها منح نشطة فقط
+                // $query->where('finished_date', '>=', now());
+            })->with('country')->get();
+
+            $message = 'تم جلب المدن التي لها منح دراسية بنجاح';
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'تم جلب المدن بنجاح',
-            'data' => $cities
+            'message' => $message,
+            'data' => $cities,
+            'is_admin' => $user && $user->role === 'admin', // اختياري: لتوضيح نوع البيانات
         ], 200);
     }
 
-    // إنشاء مدينة جديدة
+    // ====== باقي الدوال (store, show, update, destroy) بدون تغيير ======
+
     public function store(Request $request)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
+
         $validated = $request->validate([
             'city_name' => 'required|string|max:25',
             'country_id' => 'required|exists:countries,id',
@@ -44,7 +68,6 @@ class CityController extends Controller
         ], 201);
     }
 
-    // عرض مدينة محددة
     public function show($id)
     {
         $city = City::with('country')->find($id);
@@ -62,16 +85,16 @@ class CityController extends Controller
         ], 200);
     }
 
-    // تحديث مدينة
     public function update(Request $request, $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
+
         $city = City::find($id);
         if (!$city) {
             return response()->json([
@@ -95,16 +118,16 @@ class CityController extends Controller
         ], 200);
     }
 
-    // حذف مدينة
     public function destroy($id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
-            'data' => null
-        ], 403);
-    }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
+                'data' => null
+            ], 403);
+        }
+
         $city = City::find($id);
         if (!$city) {
             return response()->json([
