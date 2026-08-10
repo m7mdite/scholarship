@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('country_name',30);
             $table->float('country_rate');
+            $table->timestamps();
         });
     }
 
