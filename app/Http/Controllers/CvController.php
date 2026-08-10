@@ -39,6 +39,8 @@ class CvController extends Controller
 
         try {
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
+            ->timeout(10)              // ✅ الجديد: يفشل بسرعة بدل ما يعلّق طويل
+            ->connectTimeout(3) 
                 ->post($ollamaUrl . '/api/chat', [
                     'model' => $model,
                     'messages' => [['role' => 'user', 'content' => $prompt]],
@@ -79,21 +81,22 @@ class CvController extends Controller
 
     // ============================================================  السيرة الذاتية (CV)  ====================
     public function generateCV(Request $request)
-    {
-        $validated = $request->validate([
-            'language' => 'required|in:arabic,english',
-            'full_name' => 'required|string|max:100',
-            'email' => 'required|email',
-            'phone' => 'nullable|string',
-            'languages' => 'required|array',
-            'languages.*' => 'string',
-            'skills' => 'required|array',
-            'skills.*' => 'string',
-            'age' => 'nullable|integer|min:16|max:100',
-            'specialization' => 'required|string|max:100',
-            'bio' => 'required|string|min:20',
-        ]);
+{
+    $validated = $request->validate([
+        'language' => 'required|in:arabic,english',
+        'full_name' => 'required|string|max:100',
+        'email' => 'required|email',
+        'phone' => 'nullable|string',
+        'languages' => 'required|array',
+        'languages.*' => 'string',
+        'skills' => 'required|array',
+        'skills.*' => 'string',
+        'age' => 'nullable|integer|min:16|max:100',
+        'specialization' => 'required|string|max:100',
+        'bio' => 'required|string|min:20',
+    ]);
 
+    try {
         // تحسين النبذة باستخدام الذكاء الاصطناعي
         $enhancedBio = $this->enhanceBio(
             $validated['bio'],
@@ -115,53 +118,55 @@ class CvController extends Controller
         $view = ($validated['language'] === 'arabic') ? 'cv.arabic' : 'cv.english';
         $html = view($view, $data)->render();
 
-        try {
-            $mpdf = new Mpdf([
-                'mode' => 'utf-8',
-                'format' => 'A4',
-                'margin_left' => 15,
-                'margin_right' => 15,
-                'margin_top' => 15,
-                'margin_bottom' => 15,
-                'autoScriptToLang' => true,
-                'autoLangToFont' => true,
-                'autoArabic' => true,
-            ]);
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'autoArabic' => true,
+        ]);
 
-            if ($validated['language'] === 'arabic') {
-                $mpdf->SetDirectionality('rtl');
-            }
-
-            $mpdf->WriteHTML($html);
-            $pdfContent = $mpdf->Output('', 'S');
-            $fileName = 'CV_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['full_name']) . '.pdf';
-
-            // تسجيل عملية توليد السيرة الذاتية (فقط إذا كان المستخدم مسجلاً)
-            $userId = auth()->guard()->id();
-            if ($userId) {
-                UserAction::create([
-                    'user_id' => $userId,
-                    'action' => 'generate_cv',
-                    'metadata' => [
-                        'specialization' => $validated['specialization'],
-                        'language' => $validated['language'],
-                        'bio_length' => strlen($validated['bio']),
-                    ],
-                ]);
-            }
-
-            return response($pdfContent, 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('mPDF generation failed: ' . $e->getMessage());
-            return response()->json([
-                'status' => 'error',
-                'message' => 'فشل إنشاء ملف PDF: ' . $e->getMessage()
-            ], 500);
+        if ($validated['language'] === 'arabic') {
+            $mpdf->SetDirectionality('rtl');
         }
+
+        $mpdf->WriteHTML($html);
+        $pdfContent = $mpdf->Output('', 'S');
+        $fileName = 'CV_' . preg_replace('/[^A-Za-z0-9]/', '_', $validated['full_name']) . '.pdf';
+
+        // تسجيل عملية توليد السيرة الذاتية (فقط إذا كان المستخدم مسجلاً)
+        $userId = auth()->guard()->id();
+        if ($userId) {
+            UserAction::create([
+                'user_id' => $userId,
+                'action' => 'generate_cv',
+                'metadata' => [
+                    'specialization' => $validated['specialization'],
+                    'language' => $validated['language'],
+                    'bio_length' => strlen($validated['bio']),
+                ],
+            ]);
+        }
+
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('CV generation failed: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'فشل إنشاء السيرة الذاتية: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     // ======================================================= رسالة الدافع (Motivation Letter) =======================================================
     public function generateMotivationLetter(Request $request)
