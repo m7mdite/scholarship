@@ -73,7 +73,7 @@ class ScholarshipController extends Controller
 
         $query = Scholarship::with(['city', 'specialization', 'photos', 'country', 'category'])
             ->where('finished_date', '>=', $today)
-            ->whereNotIn('id', $favorites->pluck('id'))
+            // ->whereNotIn('id', $favorites->pluck('id'))
             ->where(function ($q) use ($specializationIds, $countryIds, $cityIds, $categoryIds) {
                 $q->whereIn('specialization_id', $specializationIds)
                     ->orWhereIn('country_id', $countryIds)
