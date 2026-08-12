@@ -505,7 +505,15 @@ class ScholarshipController extends Controller
                     'nationalities' => $criteria['nationalities'] ?? null,
                 ]);
             }
-            $this->sendNotificationsToMatchingUsers($scholarship);
+            // $this->sendNotificationsToMatchingUsers($scholarship);
+            $notificationsSent = true;
+            try {
+                $this->sendNotificationsToMatchingUsers($scholarship);
+            } catch (\Throwable $notifyException) {
+                // فشل إرسال الإشعارات لا يجب أن يوقف إنشاء المنحة أو يعمل rollback لها
+                $notificationsSent = false;
+                Log::error('فشل إرسال إشعارات المنحة الجديدة (id: ' . $scholarship->id . '): ' . $notifyException->getMessage());
+            }
 
             DB::commit();
             // تحميل العلاقات لعرضها في الاستجابة
@@ -513,9 +521,21 @@ class ScholarshipController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'تمت إضافة المنحة بنجاح',
+                'message' => $notificationsSent
+                    ? 'تمت إضافة المنحة بنجاح'
+                    : 'تمت إضافة المنحة بنجاح، لكن تعذّر إرسال إشعارات للمستخدمين',
                 'data' => $scholarship
             ], 201);
+
+            // DB::commit();
+            // // تحميل العلاقات لعرضها في الاستجابة
+            // $scholarship->load(['country', 'city', 'specialization', 'category', 'photos', 'reviews', 'howToApply', 'applicationCriteria']);
+
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'تمت إضافة المنحة بنجاح',
+            //     'data' => $scholarship
+            // ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -587,16 +607,16 @@ class ScholarshipController extends Controller
         try {
             $scholarship->update($validated);
             if ($request->filled('application_criteria')) {
-    $criteria = $request->input('application_criteria');
-    $scholarship->applicationCriteria()->updateOrCreate(
-        ['scholarship_id' => $scholarship->id],
-        [
-            'age' => $criteria['age'] ?? null,
-            'gender' => $criteria['gender'] ?? null,
-            'nationalities' => $criteria['nationalities'] ?? null,
-        ]
-    );
-}
+                $criteria = $request->input('application_criteria');
+                $scholarship->applicationCriteria()->updateOrCreate(
+                    ['scholarship_id' => $scholarship->id],
+                    [
+                        'age' => $criteria['age'] ?? null,
+                        'gender' => $criteria['gender'] ?? null,
+                        'nationalities' => $criteria['nationalities'] ?? null,
+                    ]
+                );
+            }
 
             // معالجة الصورة الجديدة (إن وجدت)
             if ($request->hasFile('photo')) {
