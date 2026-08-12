@@ -57,9 +57,9 @@ class Scholarship extends Model
         return $this->hasOne(HowToApply::class, 'scholarship_id', 'id');
     }
     public function applicationCriteria()
-    {
-        return $this->hasMany(ApplicationCriteria::class, 'scholarship_id', 'id');
-    }
+{
+    return $this->hasOne(ApplicationCriteria::class, 'scholarship_id', 'id');
+}
     public function favoriteByUsers()
     {
         return $this->hasMany(FavoriteScholarship::class, 'scholarship_id', 'id');
