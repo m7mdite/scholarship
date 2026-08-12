@@ -536,6 +536,7 @@ public function getTopScholarships(Request $request)
         $scholarship = Scholarship::with([
             'country',
             'city',
+            'reviews',
             'specialization',
             'category',
             'photos',
