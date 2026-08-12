@@ -30,7 +30,7 @@ class ReviewController extends Controller
     }
 
     // إضافة ريفيو جديد (للأدمن فقط)
-    public function store(Request $request, $scholarshipId)
+    public function store(Request $request,int $scholarshipId)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return response()->json([
