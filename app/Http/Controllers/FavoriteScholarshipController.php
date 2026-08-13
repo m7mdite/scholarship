@@ -21,7 +21,6 @@ class FavoriteScholarshipController extends Controller
             ], 404);
         }
 
-        // التحقق إذا كانت المنحة موجودة بالفعل في المفضلة
         if ($user->favoriteScholarships()->where('scholarship_id', $scholarshipId)->exists()) {
             return response()->json([
                 'status' => 'error',
@@ -39,7 +38,7 @@ class FavoriteScholarshipController extends Controller
     }
 
     // حذف منحة من المفضلة
-    public function remove(Request $request, $scholarshipId)
+    public function remove(Request $request,int $scholarshipId)
     {
         $user = $request->user();
 
