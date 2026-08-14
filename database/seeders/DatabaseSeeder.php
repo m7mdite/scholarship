@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CitySeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(SpecializationSeeder::class);
+        $this->call(PhotoSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(ScholarshipSeeder::class);
     }

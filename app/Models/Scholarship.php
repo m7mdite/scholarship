@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,7 +28,7 @@ class Scholarship extends Model
         'scholarship_link'
     ];
 
-    
+
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
@@ -48,18 +49,20 @@ class Scholarship extends Model
     {
         return $this->hasMany(Notification::class, 'scholarship_id', 'id');
     }
-    public function photos()
+    public function matchingPhoto()
     {
-        return $this->hasMany(Photo::class, 'scholarship_id', 'id');
+        return Photo::where('city_id', $this->city_id)
+            ->where('specialization_id', $this->specialization_id)
+            ->first();
     }
     public function howToApply()
     {
         return $this->hasOne(HowToApply::class, 'scholarship_id', 'id');
     }
     public function applicationCriteria()
-{
-    return $this->hasOne(ApplicationCriteria::class, 'scholarship_id', 'id');
-}
+    {
+        return $this->hasOne(ApplicationCriteria::class, 'scholarship_id', 'id');
+    }
     public function favoriteByUsers()
     {
         return $this->hasMany(FavoriteScholarship::class, 'scholarship_id', 'id');
@@ -69,37 +72,37 @@ class Scholarship extends Model
         return $this->hasMany(PersonalExperience::class, 'scholarship_id', 'id');
     }
     public function reviews()
-{
-    return $this->hasMany(Review::class);
-}
-
-
-   
-
-public function getRemainingTimeAttribute()
-{
-    if (!$this->finished_date) return 'غير محدد';
-
-    $now = Carbon::now();
-    $finish = Carbon::parse($this->finished_date);
-    $isPast = $finish->isPast();
-    $days = $isPast ? $finish->diffInDays($now) : $now->diffInDays($finish);
-
-    if ($days < 30) {
-        $text = $days . ' يوم';
-    } elseif ($days < 365) {
-        $months = floor($days / 30);
-        $text = $months . ' شهر';
-    } else {
-        $years = floor($days / 365);
-        $remainingDays = $days % 365;
-        $months = floor($remainingDays / 30);
-        $text = $years . ' سنة';
-        if ($months > 0) {
-            $text .= ' و ' . $months . ' شهر';
-        }
+    {
+        return $this->hasMany(Review::class);
     }
 
-    return ($isPast ? 'انتهت منذ ' : 'متبقي ') . $text;
-}
+
+
+
+    public function getRemainingTimeAttribute()
+    {
+        if (!$this->finished_date) return 'غير محدد';
+
+        $now = Carbon::now();
+        $finish = Carbon::parse($this->finished_date);
+        $isPast = $finish->isPast();
+        $days = $isPast ? $finish->diffInDays($now) : $now->diffInDays($finish);
+
+        if ($days < 30) {
+            $text = $days . ' يوم';
+        } elseif ($days < 365) {
+            $months = floor($days / 30);
+            $text = $months . ' شهر';
+        } else {
+            $years = floor($days / 365);
+            $remainingDays = $days % 365;
+            $months = floor($remainingDays / 30);
+            $text = $years . ' سنة';
+            if ($months > 0) {
+                $text .= ' و ' . $months . ' شهر';
+            }
+        }
+
+        return ($isPast ? 'انتهت منذ ' : 'متبقي ') . $text;
+    }
 }

@@ -14,7 +14,9 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PhotoController;
 use App\Events\TestNotification;
+;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Models\Category;
@@ -107,16 +109,15 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::apiResource('specializations', SpecializationController::class)->except(['index', 'show']);
 
     Route::post('/notifications/send-to-all', [NotificationController::class, 'sendToAll']);
+    Route::post('/photo', [PhotoController::class, 'store']);
 
-    // إدارة الريفيوز (الكونترولر نفسه بيتأكد إن المستخدم أدمن، بس لازم يكون داخل auth:sanctum
-    // عشان Auth::user() يشتغل أصلاً)
+    
     Route::post('/scholarships/{scholarshipId}/reviews', [ReviewController::class, 'store']);
     Route::put('/reviews/{id}', [ReviewController::class, 'update']);
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 });
 
-// ملاحظة: دوال index و show للموارد المذكورة أعلاه قد تم تعريفها ضمن المسارات العامة (أو يمكنك تعريفها بشكل صريح)
-// حتى يتمكن الجميع من عرض القوائم والتفاصيل، أضف هذه المسارات خارج مجموعة الأدمن:
+// ===============================================================================
 Route::get('/countries', [CountryController::class, 'index']);
 Route::get('/countries/{id}', [CountryController::class, 'show']);
 Route::get('/cities', [CityController::class, 'index']);
@@ -129,10 +130,10 @@ Route::post('/chat', [ChatController::class, 'handleChat']);
 Route::post('/generate-cv', [CvController::class, 'generateCV']);
 Route::post('/generate-motivation-letter', [CvController::class, 'generateMotivationLetter']);
 Route::post('/generate-recommendation', [CvController::class, 'generateRecommendationLetter']);
-Route::get('/test-pdf', function () {
-    $pdf = Pdf::loadHTML('<h1>Hello</h1>');
-    return $pdf->download('test.pdf');
-});
+// Route::get('/test-pdf', function () {
+//     $pdf = Pdf::loadHTML('<h1>Hello</h1>');
+//     return $pdf->download('test.pdf');
+// });
 // Route::get('/top-scholarships', [ScholarshipController::class, 'getTopScholarships']);
 
 

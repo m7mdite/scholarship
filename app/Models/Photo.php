@@ -7,17 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $table = 'photos';
-    protected $primaryKey = 'id';
-    public $timestamps = false;
-    protected $fillable = ['image_path', 'city_id', 'id'];
+    protected $fillable = ['image_path', 'city_id', 'specialization_id'];
 
     public function city()
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
-    public function scholarship()
+    public function specialization()
     {
-        return $this->belongsTo(Scholarship::class, 'scholarship_id', 'id');
+        return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
     }
 }

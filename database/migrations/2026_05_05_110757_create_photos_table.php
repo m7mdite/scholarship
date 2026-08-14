@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('photos', function (Blueprint $table) {
-            $table->id();
-            $table->string('image_path', 200);
-            $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
-            $table->foreignId('scholarship_id')->constrained('scholarships')->onDelete('cascade');
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('image_path', 200);
+    $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
+    $table->foreignId('specialization_id')->constrained('specializations')->onDelete('cascade');
+    $table->timestamps();
+    $table->index(['city_id', 'specialization_id']);
+});
     }
 
     /**
