@@ -38,7 +38,38 @@ class CityController extends Controller
             'status' => 'success',
             'message' => $message,
             'data' => $cities,
-            'is_admin' => $user && $user->role === 'admin', // اختياري: لتوضيح نوع البيانات
+            'is_admin' => $user && $user->role === 'admin', 
+        ], 200);
+    }
+    
+    public function getByCountry(int $countryId)
+    {
+        $country = Country::find($countryId);
+        if (!$country) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'الدولة غير موجودة',
+                'data' => null
+            ], 404);
+        }
+
+        $user = Auth::user();
+
+        $query = City::where('country_id', $countryId);
+
+        if ($user && $user->role === 'admin') {
+            $cities = $query->get();
+            $message = 'تم جلب جميع مدن الدولة بنجاح (صلاحية مدير)';
+        } else {
+            $cities = $query->whereHas('scholarships')->get();
+            $message = 'تم جلب مدن الدولة التي لها منح دراسية بنجاح';
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'count' => $cities->count(),
+            'data' => $cities,
         ], 200);
     }
 
@@ -68,7 +99,7 @@ class CityController extends Controller
         ], 201);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $city = City::with('country')->find($id);
         if (!$city) {
@@ -85,7 +116,7 @@ class CityController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return response()->json([
@@ -118,7 +149,7 @@ class CityController extends Controller
         ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             return response()->json([

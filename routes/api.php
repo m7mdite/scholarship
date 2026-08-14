@@ -118,6 +118,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 });
 
 // ===============================================================================
+Route::get('/cities/by-country/{countryId}', [CityController::class, 'getByCountry']);
 Route::get('/countries', [CountryController::class, 'index']);
 Route::get('/countries/{id}', [CountryController::class, 'show']);
 Route::get('/cities', [CityController::class, 'index']);
