@@ -3,11 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scholarship;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class FavoriteScholarshipController extends Controller
 {
+    private const DEFAULT_PHOTO_PATH = '/storage/scholarships/default.jpg';
+
+    // نفس الـ helper المستخدم بـ ScholarshipController — يجيب بنك الصور كامل مرة وحدة
+    private function photosMap(): Collection
+    {
+        return Photo::all()->keyBy(fn($p) => $p->city_id . '-' . $p->specialization_id);
+    }
+
+    private function photoUrlFor($scholarship, ?Collection $map = null): string
+    {
+        $map = $map ?? $this->photosMap();
+        $key = $scholarship->city_id . '-' . $scholarship->specialization_id;
+        $photo = $map->get($key);
+
+        return $photo ? url($photo->image_path) : url(self::DEFAULT_PHOTO_PATH);
+    }
+
     // إضافة منحة إلى المفضلة
     public function add(Request $request,int $scholarshipId)
     {
@@ -64,10 +83,12 @@ class FavoriteScholarshipController extends Controller
         $today = Carbon::today();
 
         $favorites = $request->user()->favoriteScholarships()
-            ->with(['city', 'specialization', 'photos', 'country', 'category'])
+            ->with(['city', 'specialization', 'country', 'category'])
             ->get();
 
-        $formatted = $favorites->map(function ($scholarship) use ($today) {
+        $map = $this->photosMap();
+
+        $formatted = $favorites->map(function ($scholarship) use ($today, $map) {
             $startDate = $scholarship->start_date ? Carbon::parse($scholarship->start_date) : null;
 
             if ($startDate && $startDate->isFuture()) {
@@ -79,10 +100,6 @@ class FavoriteScholarshipController extends Controller
                 $startStatus = 'تاريخ البدء غير محدد';
             }
 
-            $photoUrl = $scholarship->photos->isNotEmpty()
-                ? url($scholarship->photos->first()->image_path)
-                : null;
-
             return [
                 'id' => $scholarship->id,
                 'scholarship_name' => $scholarship->scholarship_name,
@@ -91,7 +108,7 @@ class FavoriteScholarshipController extends Controller
                 'city_name' => $scholarship->city->city_name ?? null,
                 'specialization_name' => $scholarship->specialization->specialization_name ?? null,
                 'start_status' => $startStatus,
-                'photo_url' => $photoUrl,
+                'photo_url' => $this->photoUrlFor($scholarship, $map),
                 'is_favorite' => true,
             ];
         });
