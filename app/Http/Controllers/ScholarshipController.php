@@ -335,7 +335,13 @@ class ScholarshipController extends Controller
         }
 
         $scholarship->photo_url = $this->photoUrlFor($scholarship);
-
+        /** @var \App\Models\User|null $user */
+    $user = auth('sanctum')->user();
+    if ($user) {
+        $scholarship->is_favorite = $user->favoriteScholarships()
+            ->where('scholarships.id', $scholarship->id)
+            ->exists();
+    }
         return response()->json([
             'status' => 'success',
             'message' => 'تم جلب المنحة بنجاح',
@@ -548,9 +554,12 @@ class ScholarshipController extends Controller
                 $user->id,
                 'info',
                 '📢 منحة جديدة متاحة!',
+                // "",
                 "تم إضافة منحة جديدة: {$scholarship->scholarship_name} في تخصص {$scholarship->specialization->specialization_name}",
                 [
                     'scholarship_id' => $scholarship->id,
+                    'country_name' => $scholarship->country->country_name ?? null,
+                    'specialization_name' => $scholarship->specialization->specialization_name ?? null,
                     'scholarship_name' => $scholarship->scholarship_name,
                     'link' => '/scholarships/' . $scholarship->id,
                 ]
