@@ -38,7 +38,7 @@ class StoreScholarshipRequest extends FormRequest
             'reviewer_name' => 'nullable|string|max:100',
             'review' => 'nullable|string',
             'rating' => 'nullable|integer|min:1|max:5',
-            'how_to_apply_description' => 'nullable|string|max:400',
+            'how_to_apply_description' => 'nullable|string|max:8000',
         ];
     }
 
