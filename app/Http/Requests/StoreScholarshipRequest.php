@@ -17,28 +17,28 @@ class StoreScholarshipRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'scholarship_name' => 'required|string|max:50',
-            'degree' => 'required|string|max:40',
-            'finance' => 'required|string|max:40',
+            'scholarship_name' => 'required|string|max:500',
+            'degree' => 'required|string|max:400',
+            'finance' => 'required|string|max:400',
             'scholarship_description' => 'required|string|max:500',
-            'donar' => 'required|string|max:40',
+            'donar' => 'required|string|max:400',
             'start_date' => 'required|date',
             'finished_date' => 'required|date',
             'scholarship_language' => 'required|string|max:30',
-            'scholarship_link' => 'required|max:255',
+            'scholarship_link' => 'required|max:855',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'specialization_id' => 'required|exists:specializations,id',
             'category_id' => 'required|exists:categories,id',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'application_criteria' => 'nullable|array',
-            'application_criteria.age' => 'nullable|string|max:50',
-            'application_criteria.gender' => 'nullable|string|max:50',
-            'application_criteria.nationalities' => 'nullable|string|max:100',
+            'application_criteria.age' => 'nullable|string|max:500',
+            'application_criteria.gender' => 'nullable|string|max:500',
+            'application_criteria.nationalities' => 'nullable|string|max:900',
             'reviewer_name' => 'nullable|string|max:100',
             'review' => 'nullable|string',
             'rating' => 'nullable|integer|min:1|max:5',
-            'how_to_apply_description' => 'nullable|string|max:8000',
+            'how_to_apply_description' => 'nullable|string|max:900',
         ];
     }
 
