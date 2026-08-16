@@ -25,7 +25,7 @@ class StoreScholarshipRequest extends FormRequest
             'start_date' => 'required|date',
             'finished_date' => 'required|date',
             'scholarship_language' => 'required|string|max:30',
-            'scholarship_link' => 'required|url|max:255',
+            'scholarship_link' => 'required|max:255',
             'country_id' => 'required|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'specialization_id' => 'required|exists:specializations,id',
