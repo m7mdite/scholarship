@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth('sanctum')->user();
 
         // إذا كان المستخدم Admin، يجلب جميع الفئات
         if ($user && $user->role === 'admin') {

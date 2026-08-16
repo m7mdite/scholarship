@@ -16,7 +16,7 @@ class SpecializationController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth('sanctum')->user();
 
         // إذا كان المستخدم Admin، يجلب جميع التخصصات
         if ($user && $user->role === 'admin') {

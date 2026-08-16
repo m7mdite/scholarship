@@ -18,7 +18,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth('sanctum')->user();
 
         // إذا كان المستخدم Admin، يجلب جميع المدن
         if ($user && $user->role === 'admin') {

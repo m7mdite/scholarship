@@ -16,7 +16,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = auth('sanctum')->user();
 
         // إذا كان المستخدم Admin، يجلب جميع الدول
         if ($user && $user->role === 'admin') {
@@ -41,8 +41,10 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth('sanctum')->user();
+
         // التحقق من صلاحيات المدير
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!$user || $user->role !== 'admin') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
@@ -70,7 +72,7 @@ class CountryController extends Controller
     public function show($id)
     {
         $country = Country::find($id);
-        
+
         if (!$country) {
             return response()->json([
                 'status' => 'error',
@@ -91,8 +93,10 @@ class CountryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = auth('sanctum')->user();
+
         // التحقق من صلاحيات المدير
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!$user || $user->role !== 'admin') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
@@ -101,7 +105,7 @@ class CountryController extends Controller
         }
 
         $country = Country::find($id);
-        
+
         if (!$country) {
             return response()->json([
                 'status' => 'error',
@@ -129,8 +133,10 @@ class CountryController extends Controller
      */
     public function destroy($id)
     {
+        $user = auth('sanctum')->user();
+
         // التحقق من صلاحيات المدير
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!$user || $user->role !== 'admin') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'غير مصرح. هذه العملية تتطلب صلاحيات المدير.',
@@ -139,7 +145,7 @@ class CountryController extends Controller
         }
 
         $country = Country::find($id);
-        
+
         if (!$country) {
             return response()->json([
                 'status' => 'error',
