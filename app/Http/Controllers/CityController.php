@@ -53,7 +53,7 @@ class CityController extends Controller
             ], 404);
         }
 
-        $user = Auth::user();
+       $user = auth('sanctum')->user();
 
         $query = City::where('country_id', $countryId);
 
